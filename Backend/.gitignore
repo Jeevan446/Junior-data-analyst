@@ -2,3 +2,4 @@
 venv/
 temp_files/
 __pycache__/
+test.py
