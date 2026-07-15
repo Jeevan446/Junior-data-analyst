@@ -1,2 +1,4 @@
 .env
-venv
+venv/
+temp_files/
+__pycache__/
