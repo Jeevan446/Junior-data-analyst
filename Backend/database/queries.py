@@ -76,6 +76,37 @@ def search_user(user_id):
 
 
 
+# create file table 
+def create_file_table():
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS file(
+        filename VARCHAR PRIMARY KEY,
+        user_id VARCHAR REFERENCES users(user_id)
+    )
+    ''')
+        conn.commit()
+    except Exception as e:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+        print("Error while creating file table",e)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+   
+
+  
+
+
 
         
     

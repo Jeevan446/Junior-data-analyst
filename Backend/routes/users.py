@@ -1,6 +1,5 @@
 from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel,Field
-from typing import Annotated
 import random
 import string
 from database.queries import search_user,add_users
