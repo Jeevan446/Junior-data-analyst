@@ -2,5 +2,5 @@ fastapi
 uvicorn
 dotenv
 psycopg[binary]
-
+pydantic
 
