@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from routes.users import router as user_router
+from routes.upload import router as upload_router
 from database.queries import create_file_table
 load_dotenv()
 app=FastAPI()
 
 create_file_table()
 app.include_router(user_router)
+app.include_router(upload_router)
 
 
 

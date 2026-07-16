@@ -3,4 +3,4 @@ uvicorn
 dotenv
 psycopg[binary]
 pydantic
-
+python-multipart

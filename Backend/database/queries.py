@@ -102,11 +102,26 @@ def create_file_table():
         if conn:
             conn.close()
 
-   
-
-  
-
-
+def add_files(filename,userid):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        INSERT INTO file(filename,user_id)
+        VALUES(%s,%s)
+        ''',(filename,userid))
+        conn.commit()
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("Error while adding file in filetable")
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
         
     
