@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Form,UploadFile,HTTPException
-from database.queries import add_files
+from database.queries import add_files,search_user
 from pathlib import Path
 from typing import List
 router=APIRouter()
@@ -8,12 +8,21 @@ router=APIRouter()
 async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
 
     try:
+        valid_user=search_user(user_id)
+        if not valid_user:
+            raise HTTPException(status_code=404,detail="User not found")  
+        
         for file in files:
+            
             filename=user_id+'&'+file.filename
             path=Path('temp_files')/filename
             path.write_bytes(await file.read())
             add_files(filename,user_id)
         return{"sucess":True,"message":"file uploaded sucessfully"}
+
+    except HTTPException:
+        raise
+    
     except Exception as e:
         raise HTTPException(status_code=500,detail="Internal Server Error while uploading files")
     
