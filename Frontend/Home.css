@@ -1,0 +1,331 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+body{
+
+    background:#ffffff;
+
+    color:#172033;
+
+}
+
+
+header{
+
+    padding:25px 8%;
+
+}
+
+
+nav{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.logo{
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+
+.logo span{
+
+    color:#2563eb;
+
+}
+
+
+
+.nav-btn{
+
+    padding:12px 25px;
+
+    border:none;
+
+    background:#2563eb;
+
+    color:white;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+
+
+.nav-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+
+
+.hero{
+
+    min-height:85vh;
+
+    padding:60px 8%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:60px;
+
+}
+
+
+
+.hero-content{
+
+    max-width:620px;
+
+}
+
+
+
+.hero-content h1{
+
+    font-size:56px;
+
+    line-height:1.15;
+
+    font-weight:700;
+
+}
+
+
+
+.hero-content h1 span{
+
+    color:#2563eb;
+
+}
+
+
+
+.quote{
+
+    margin-top:25px;
+
+    font-size:22px;
+
+    color:#334155;
+
+}
+
+
+
+.description{
+
+    margin-top:20px;
+
+    font-size:17px;
+
+    line-height:1.7;
+
+    color:#64748b;
+
+}
+
+
+
+.main-btn{
+
+    margin-top:30px;
+
+    padding:15px 30px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+
+
+.main-btn i{
+
+    margin-left:8px;
+
+}
+
+
+
+.main-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+
+
+.feature-box{
+
+    width:420px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+
+
+.feature{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:22px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:12px;
+
+    background:#ffffff;
+
+    transition:.3s;
+
+}
+
+
+
+.feature:hover{
+
+    transform:translateX(-8px);
+
+    border-color:#2563eb;
+
+}
+
+
+
+.feature i{
+
+    font-size:30px;
+
+    color:#2563eb;
+
+    width:40px;
+
+}
+
+
+
+.feature h3{
+
+    font-size:18px;
+
+    margin-bottom:5px;
+
+}
+
+
+
+.feature p{
+
+    color:#64748b;
+
+    font-size:14px;
+
+}
+
+
+
+
+
+@media(max-width:900px){
+
+
+.hero{
+
+    flex-direction:column;
+
+    text-align:center;
+
+}
+
+
+
+.feature-box{
+
+    width:100%;
+
+    max-width:450px;
+
+}
+
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+.hero-content h1{
+
+    font-size:38px;
+
+}
+
+
+header{
+
+    padding:20px;
+
+}
+
+
+.hero{
+
+    padding:40px 20px;
+
+}
+
+
+.feature{
+
+    text-align:left;
+
+}
+
+
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>InsightFlow - User Information</title>
+
+    <link rel="stylesheet" href="user.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <nav>
+
+        <div class="logo">
+            Insight<span>Flow</span>
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<section class="user-container">
+
+
+    <div class="form-box">
+
+
+        <h1>
+            Tell Us About Yourself
+        </h1>
+
+
+        <p class="info">
+            This information is optional, but providing correct details
+            helps InsightFlow understand your business better and improves
+            analysis accuracy.
+        </p>
+
+
+
+        <label>
+            Your Name
+        </label>
+
+        <input 
+        type="text"
+        id="name"
+        placeholder="Enter your name (optional)">
+
+
+
+        <label>
+            Company Type
+        </label>
+
+        <input 
+        type="text"
+        id="company"
+        placeholder="Example: E-commerce, Education, Agriculture">
+
+
+
+        <label>
+            About Your Company
+        </label>
+
+        <textarea
+        id="description"
+        placeholder="Describe your company (maximum 100 words)">
+        </textarea>
+
+
+        <p id="word-count">
+            Words: 0 / 100
+        </p>
+
+
+        <p id="error-message"></p>
+
+
+
+        <div class="buttons">
+
+
+            <button class="skip" onclick="skipInfo()">
+                Skip
+            </button>
+
+
+            <button class="start" onclick="startAnalysis()">
+                Start Analysis
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<script src="user.js"></script>
+
+
+</body>
+
+</html>
