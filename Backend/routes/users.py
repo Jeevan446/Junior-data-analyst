@@ -66,6 +66,7 @@ def analyze(usermetadata:Usermetadata):
         if not is_user:
             raise HTTPException(status_code=404,detail="Please add some files first")
         file_to_df(usermetadata.id)
+        
         return {"sucess":True,"message":"User files found sucessfully"}
         
         
