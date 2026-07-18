@@ -13,9 +13,11 @@ async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
             raise HTTPException(status_code=404,detail="User not found")  
         
         for file in files:
-            
+
             filename=user_id+'&'+file.filename
             path=Path('temp_files')/filename
+            if(path.suffix!='.csv' and  path.suffix!='.xlsx' and path.suffix!='.xls'):
+                raise HTTPException(status_code=415,detail="Unsupported file format")
             path.write_bytes(await file.read())
             add_files(filename,user_id)
         return{"sucess":True,"message":"file uploaded sucessfully"}
