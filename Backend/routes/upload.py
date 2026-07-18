@@ -1,5 +1,6 @@
 from fastapi import APIRouter,Form,UploadFile,HTTPException
 from database.queries import add_files,search_user
+from outputs.clean_filename import clean_filename
 from pathlib import Path
 from typing import List
 router=APIRouter()
@@ -13,8 +14,8 @@ async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
             raise HTTPException(status_code=404,detail="User not found")  
         
         for file in files:
-
-            filename=user_id+'&'+file.filename
+            cleaned_file_name=clean_filename(file.filename)
+            filename=user_id+'&'+cleaned_file_name
             path=Path('temp_files')/filename
             if(path.suffix!='.csv' and  path.suffix!='.xlsx' and path.suffix!='.xls'):
                 raise HTTPException(status_code=415,detail="Unsupported file format")

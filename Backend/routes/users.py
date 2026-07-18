@@ -3,6 +3,7 @@ from pydantic import BaseModel,Field
 import random
 import string
 from database.queries import search_user,add_users
+from core.files_to_dataframes import file_to_df
 
 router=APIRouter()
 
@@ -54,8 +55,27 @@ def create_new_user(user:User):
         raise HTTPException(status_code=500,detail="Internal Server Error While creating user")
 
 
+class Usermetadata(BaseModel):
+    id:str
+   
         
+@router.post('/analyze')
+def analyze(usermetadata:Usermetadata):
+    try:
+        is_user=search_user(usermetadata.id)
+        if not is_user:
+            raise HTTPException(status_code=404,detail="Please add some files first")
+        file_to_df(usermetadata.id)
+        return {"sucess":True,"message":"User files found sucessfully"}
+        
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("Error while analyzing data",e)
+        raise HTTPException(status_code=500,detail="Internal server error while analyzing")
 
+   
 
    
     

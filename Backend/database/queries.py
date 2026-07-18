@@ -123,6 +123,26 @@ def add_files(filename,userid):
         if conn:
             conn.close()
 
+def fetch_filenames(user_id):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        SELECT filename FROM file
+        WHERE user_id=%s
         
+        ''',(user_id,))
+        data=cursor.fetchall()
+        return data
+    except Exception as e:
+        print("Error while fetching filenames from userid",e)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
     
 
