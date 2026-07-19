@@ -15,17 +15,32 @@ def columns_extraction(df_arr):
         for df_dict in df_arr:
             #.columns returns pandas object of columns but tolist method converts the object to python list
             df_dict['columns']=df_dict["dataframe"].columns.tolist()
-        shapeExtraction(df_arr)
-    
+        dtype_extraction(df_arr)
         
     except Exception as e:
         print("Error while extracting data columns",e)
+
+def dtype_extraction(df_arr):
+    try:
+        for df_dict in df_arr:
+            df_dict['datatypes']=df_dict['dataframe'].dtypes.to_dict()
+        shapeExtraction(df_arr)
+    except Exception as e:
+        print('Error while extracting datatypes of columns of dataframes')
+
 
 def shapeExtraction(df_arr):
     try:
         for df_dict in df_arr:
             df_dict['shape']=df_dict['dataframe'].shape
-        print(df_arr)
+            random_row(df_arr)
     except Exception as e:
         print("Eroor while extracting shape of dataframe",e)
 
+def random_row(df_arr):
+    try:
+        for df_dict in df_arr:
+            df_dict['random_data']=df_dict['dataframe'].sample().to_dict()
+        print(df_arr)
+    except Exception as e:
+        print("Error while extracting random row ",e)
