@@ -15,6 +15,17 @@ def columns_extraction(df_arr):
         for df_dict in df_arr:
             #.columns returns pandas object of columns but tolist method converts the object to python list
             df_dict['columns']=df_dict["dataframe"].columns.tolist()
-        print(df_arr)
+        shapeExtraction(df_arr)
+    
+        
     except Exception as e:
         print("Error while extracting data columns",e)
+
+def shapeExtraction(df_arr):
+    try:
+        for df_dict in df_arr:
+            df_dict['shape']=df_dict['dataframe'].shape
+        print(df_arr)
+    except Exception as e:
+        print("Eroor while extracting shape of dataframe",e)
+
