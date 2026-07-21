@@ -13,7 +13,8 @@ let files = [];
 
 
 
-// Select files
+
+// file select
 
 fileInput.addEventListener("change", function(){
 
@@ -29,20 +30,25 @@ fileInput.addEventListener("change", function(){
 
 
 
-// Drag over
+
+// drag over
 
 dropArea.addEventListener("dragover", function(e){
 
+
     e.preventDefault();
 
+
     dropArea.style.background="#f8fafc";
+
 
 });
 
 
 
 
-// Drag leave
+
+// drag leave
 
 dropArea.addEventListener("dragleave", function(){
 
@@ -55,7 +61,9 @@ dropArea.addEventListener("dragleave", function(){
 
 
 
-// Drop files
+
+
+// drop
 
 dropArea.addEventListener("drop", function(e){
 
@@ -63,7 +71,12 @@ dropArea.addEventListener("drop", function(e){
     e.preventDefault();
 
 
-    addFiles(Array.from(e.dataTransfer.files));
+    dropArea.style.background="white";
+
+
+    addFiles(
+        Array.from(e.dataTransfer.files)
+    );
 
 
 });
@@ -72,16 +85,21 @@ dropArea.addEventListener("drop", function(e){
 
 
 
+
+
 function addFiles(newFiles){
+
 
 
     newFiles.forEach(file=>{
 
 
-        let extension = file.name
+        let extension =
+        file.name
         .split(".")
         .pop()
         .toLowerCase();
+
 
 
 
@@ -91,23 +109,46 @@ function addFiles(newFiles){
             extension==="xls"
         ){
 
-            files.push(file);
+
+            // avoid duplicate files in frontend
+
+            let alreadyExist =
+            files.some(
+                existingFile =>
+                existingFile.name === file.name
+            );
+
+
+
+            if(!alreadyExist){
+
+                files.push(file);
+
+            }
+
 
         }
         else{
 
+
             errorMessage.innerText =
             "Only CSV and Excel files are allowed";
 
+
         }
+
 
 
     });
 
 
+
     showFiles();
 
+
 }
+
+
 
 
 
@@ -120,29 +161,78 @@ function showFiles(){
     fileList.innerHTML="";
 
 
-    files.forEach(file=>{
+
+    files.forEach((file,index)=>{
 
 
-        let div=document.createElement("div");
+
+        let div =
+        document.createElement("div");
+
 
 
         div.className="file-item";
 
 
+
+
         div.innerHTML =
+
         `
+
+        <div class="file-name">
+
         <i class="fa-solid fa-file"></i>
+
         ${file.name}
+
+        </div>
+
+
+
+        <button 
+        class="remove-file"
+        onclick="removeFile(${index})">
+
+
+        <i class="fa-solid fa-xmark"></i>
+
+
+        </button>
+
+
         `;
+
 
 
         fileList.appendChild(div);
 
 
+
     });
 
 
+
 }
+
+
+
+
+
+
+
+function removeFile(index){
+
+
+    files.splice(index,1);
+
+
+    showFiles();
+
+
+}
+
+
 
 
 
@@ -160,11 +250,10 @@ analyzeButton.addEventListener(
 
 
 
+
 async function startAnalysis(){
 
 
-
-    // Check files
 
     if(files.length===0){
 
@@ -175,15 +264,18 @@ async function startAnalysis(){
 
         return;
 
+
     }
 
 
 
 
-    // Get user id
+
+
 
     const user_id =
     localStorage.getItem("user_id");
+
 
 
 
@@ -197,19 +289,24 @@ async function startAnalysis(){
 
         return;
 
+
     }
 
 
 
 
 
-    let formData = new FormData();
+
+
+
+    let formData =
+    new FormData();
 
 
 
 
 
-    // Add files
+
 
     files.forEach(file=>{
 
@@ -227,7 +324,6 @@ async function startAnalysis(){
 
 
 
-    // Add user id
 
     formData.append(
         "user_id",
@@ -240,20 +336,23 @@ async function startAnalysis(){
 
 
 
+
     try{
 
 
-        let response = await fetch(
 
-            "http://127.0.0.1:8000/uploadfiles",
+        let response =
+        await fetch(
 
-            {
+        "http://127.0.0.1:8000/uploadfiles",
 
-                method:"POST",
+        {
 
-                body:formData
+            method:"POST",
 
-            }
+            body:formData
+
+        }
 
         );
 
@@ -262,8 +361,10 @@ async function startAnalysis(){
 
 
 
+
         let data =
         await response.json();
+
 
 
 
@@ -286,8 +387,9 @@ async function startAnalysis(){
 
 
 
-        console.log(data);
 
+
+        console.log(data);
 
 
 
@@ -297,9 +399,9 @@ async function startAnalysis(){
 
 
 
+
+
     }
-
-
 
     catch(error){
 
@@ -312,6 +414,8 @@ async function startAnalysis(){
 
 
     }
+
+
 
 
 

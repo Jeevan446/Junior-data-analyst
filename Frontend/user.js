@@ -126,7 +126,7 @@ async function startAnalysis(){
 
     if(success){
 
-        window.location.href="analysis.html";
+        window.location.href="upload.html";
     }
 
 }
@@ -144,7 +144,7 @@ async function skipInfo(){
 
     if(success){
 
-        window.location.href="analysis.html";
+        window.location.href="upload.html";
     }
 
 }

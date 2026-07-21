@@ -251,6 +251,108 @@ nav{
 
 }
 
+.file-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 15px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    margin-bottom:10px;
+
+    background:white;
+
+}
+
+
+
+.file-name{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    overflow:hidden;
+
+}
+
+
+
+.file-name i{
+
+    color:#2563eb;
+
+}
+
+
+
+
+
+.remove-file{
+
+
+    width:30px;
+
+    height:30px;
+
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+
+    border:none;
+
+    border-radius:50%;
+
+
+    background:#fee2e2;
+
+
+    color:#dc2626;
+
+
+    cursor:pointer;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.remove-file:hover{
+
+
+    background:#dc2626;
+
+
+    color:white;
+
+
+}
+
+#error-message{
+
+    color:red;
+
+    margin-top:15px;
+
+}
+
+
 
 
 
