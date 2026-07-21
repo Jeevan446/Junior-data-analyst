@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Form,UploadFile,HTTPException
-from database.queries import add_files,search_user
+from database.queries import add_files,search_user,fetch_filenames
 from outputs.clean_filename import clean_filename
 from database.queries import is_file_exists
 from pathlib import Path
@@ -37,7 +37,17 @@ async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
     
 
 
-# @app.get('/uploadedfiles/{user_id}')
-# def uploadedfiles(user_id):
-#     try:
+@router.get('/uploadedfiles/{user_id}')
+def uploadedfiles(user_id):
+    try:
+        filenames=fetch_filenames(user_id)
+        filenamearr=[]
+        for filename in filenames:
+            file=Path(filename[0])
+            filename=(file.stem.split('&')[1]+file.suffix)
+            filenamearr.append(filename)
+        return{'sucess':True,'filenames':filenamearr}
+            
+    except Exception as e:
+        raise HTTPException(status_code=500,detail='Internal Server Error!')
 
