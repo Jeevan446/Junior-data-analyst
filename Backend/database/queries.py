@@ -102,6 +102,28 @@ def create_file_table():
         if conn:
             conn.close()
 
+def is_file_exists(user_id,filename):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        SELECT* FROM file WHERE filename=%s AND user_id=%s 
+        ''',(filename,user_id))
+        files=cursor.fetchall()
+        return files
+
+    except Exception as e:
+        print("Error while searching file",e)
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
 def add_files(filename,userid):
     try:
         conn=None
@@ -116,7 +138,8 @@ def add_files(filename,userid):
     except Exception as e:
         if conn:
             conn.rollback()
-        print("Error while adding file in filetable")
+        print("Error while adding file in filetable",e)
+        raise
     finally:
         if cursor:
             cursor.close()

@@ -3,13 +3,24 @@ from dotenv import load_dotenv
 from routes.users import router as user_router
 from routes.upload import router as upload_router
 from database.queries import create_file_table
-load_dotenv()
+from fastapi.middleware.cors import CORSMiddleware
 app=FastAPI()
+load_dotenv()
 
-create_file_table()
+# create_file_table()
 app.include_router(user_router)
 app.include_router(upload_router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter,Form,UploadFile,HTTPException
 from database.queries import add_files,search_user
 from outputs.clean_filename import clean_filename
+from database.queries import is_file_exists
 from pathlib import Path
 from typing import List
 router=APIRouter()
@@ -16,10 +17,15 @@ async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
         for file in files:
             cleaned_file_name=clean_filename(file.filename)
             filename=user_id+'&'+cleaned_file_name
+            
+            file_exists=is_file_exists(user_id,filename)
+            if file_exists:
+                raise HTTPException(status_code=409,detail=f"{file.filename} already exists in db donot select it")
             path=Path('temp_files')/filename
             if(path.suffix!='.csv' and  path.suffix!='.xlsx' and path.suffix!='.xls'):
                 raise HTTPException(status_code=415,detail="Unsupported file format")
             path.write_bytes(await file.read())
+
             add_files(filename,user_id)
         return{"sucess":True,"message":"file uploaded sucessfully"}
 
