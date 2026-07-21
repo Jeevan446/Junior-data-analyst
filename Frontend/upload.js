@@ -1,46 +1,34 @@
-const dropArea = document.getElementById("drop-area");
+const dropArea=document.getElementById("drop-area");
 
-const fileInput = document.getElementById("fileInput");
+const fileInput=document.getElementById("fileInput");
 
-const fileList = document.getElementById("file-list");
+const fileList=document.getElementById("file-list");
 
-const errorMessage = document.getElementById("error-message");
+const uploadedFiles=document.getElementById("uploaded-files");
 
-const analyzeButton = document.getElementById("analyze-btn");
+const errorMessage=document.getElementById("error-message");
 
-
-let files = [];
-
+const analyzeButton=document.getElementById("analyze-btn");
 
 
-
-// file select
-
-fileInput.addEventListener("change", function(){
+let files=[];
 
 
-    addFiles(Array.from(fileInput.files));
 
+window.onload=function(){
 
-    fileInput.value="";
+loadUploadedFiles();
 
-
-});
+};
 
 
 
 
+fileInput.addEventListener("change",()=>{
 
-// drag over
+addFiles(Array.from(fileInput.files));
 
-dropArea.addEventListener("dragover", function(e){
-
-
-    e.preventDefault();
-
-
-    dropArea.style.background="#f8fafc";
-
+fileInput.value="";
 
 });
 
@@ -48,40 +36,35 @@ dropArea.addEventListener("dragover", function(e){
 
 
 
-// drag leave
+dropArea.addEventListener("dragover",(e)=>{
 
-dropArea.addEventListener("dragleave", function(){
+e.preventDefault();
 
-
-    dropArea.style.background="white";
-
+dropArea.style.background="#f8fafc";
 
 });
 
 
 
 
+dropArea.addEventListener("dragleave",()=>{
 
-
-// drop
-
-dropArea.addEventListener("drop", function(e){
-
-
-    e.preventDefault();
-
-
-    dropArea.style.background="white";
-
-
-    addFiles(
-        Array.from(e.dataTransfer.files)
-    );
-
+dropArea.style.background="white";
 
 });
 
 
+
+
+dropArea.addEventListener("drop",(e)=>{
+
+e.preventDefault();
+
+dropArea.style.background="white";
+
+addFiles(Array.from(e.dataTransfer.files));
+
+});
 
 
 
@@ -90,66 +73,45 @@ dropArea.addEventListener("drop", function(e){
 function addFiles(newFiles){
 
 
-
-    newFiles.forEach(file=>{
-
-
-        let extension =
-        file.name
-        .split(".")
-        .pop()
-        .toLowerCase();
+newFiles.forEach(file=>{
 
 
+let ext=file.name.split(".").pop().toLowerCase();
 
 
-        if(
-            extension==="csv" ||
-            extension==="xlsx" ||
-            extension==="xls"
-        ){
+if(
+ext==="csv" ||
+ext==="xlsx" ||
+ext==="xls"
+){
 
 
-            // avoid duplicate files in frontend
-
-            let alreadyExist =
-            files.some(
-                existingFile =>
-                existingFile.name === file.name
-            );
+let exists=files.some(
+f=>f.name===file.name
+);
 
 
+if(!exists){
 
-            if(!alreadyExist){
-
-                files.push(file);
-
-            }
-
-
-        }
-        else{
-
-
-            errorMessage.innerText =
-            "Only CSV and Excel files are allowed";
-
-
-        }
-
-
-
-    });
-
-
-
-    showFiles();
-
+files.push(file);
 
 }
 
 
+}
+else{
 
+errorMessage.innerText="Only CSV and Excel files are allowed";
+
+}
+
+
+});
+
+
+showFiles();
+
+}
 
 
 
@@ -158,76 +120,131 @@ function addFiles(newFiles){
 function showFiles(){
 
 
-    fileList.innerHTML="";
+fileList.innerHTML="";
 
 
-
-    files.forEach((file,index)=>{
-
+files.forEach((file,index)=>{
 
 
-        let div =
-        document.createElement("div");
+let div=document.createElement("div");
 
 
-
-        div.className="file-item";
-
+div.className="file-item";
 
 
+div.innerHTML=`
 
-        div.innerHTML =
+<div class="file-name">
 
-        `
+<i class="fa-solid fa-file"></i>
 
-        <div class="file-name">
+${file.name}
 
-        <i class="fa-solid fa-file"></i>
-
-        ${file.name}
-
-        </div>
+</div>
 
 
+<button class="remove-file" onclick="removeFile(${index})">
 
-        <button 
-        class="remove-file"
-        onclick="removeFile(${index})">
+<i class="fa-solid fa-xmark"></i>
 
+</button>
 
-        <i class="fa-solid fa-xmark"></i>
-
-
-        </button>
+`;
 
 
-        `;
+fileList.appendChild(div);
 
 
-
-        fileList.appendChild(div);
-
-
-
-    });
-
+});
 
 
 }
-
-
-
 
 
 
 
 function removeFile(index){
 
+files.splice(index,1);
 
-    files.splice(index,1);
+showFiles();
+
+}
 
 
-    showFiles();
+
+
+
+
+
+async function loadUploadedFiles(){
+
+
+let user_id=localStorage.getItem("user_id");
+
+
+if(!user_id)
+return;
+
+
+
+try{
+
+
+let response=await fetch(
+
+`http://127.0.0.1:8000/uploadedfiles/${user_id}`
+
+);
+
+
+
+let data=await response.json();
+
+
+
+uploadedFiles.innerHTML="";
+
+
+
+if(data.filenames){
+
+
+data.filenames.forEach(filename=>{
+
+
+let div=document.createElement("div");
+
+
+div.className="uploaded-file";
+
+
+div.innerHTML=`
+
+<i class="fa-solid fa-file"></i>
+
+<span>${filename}</span>
+
+`;
+
+
+uploadedFiles.appendChild(div);
+
+
+
+});
+
+
+}
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
 
 
 }
@@ -238,184 +255,116 @@ function removeFile(index){
 
 
 
+analyzeButton.addEventListener("click",uploadFiles);
 
-analyzeButton.addEventListener(
-    "click",
-    startAnalysis
+
+
+
+
+
+
+async function uploadFiles(){
+
+
+
+if(files.length===0){
+
+errorMessage.innerText="Please select at least one file";
+
+return;
+
+}
+
+
+
+let user_id=localStorage.getItem("user_id");
+
+
+
+if(!user_id){
+
+errorMessage.innerText="User not found";
+
+return;
+
+}
+
+
+
+let formData=new FormData();
+
+
+
+files.forEach(file=>{
+
+formData.append("files",file);
+
+});
+
+
+
+formData.append("user_id",user_id);
+
+
+
+
+try{
+
+
+let response=await fetch(
+
+"http://127.0.0.1:8000/uploadfiles",
+
+{
+
+method:"POST",
+
+body:formData
+
+}
+
 );
 
 
 
 
+let data=await response.json();
 
 
 
+if(!response.ok){
 
-async function startAnalysis(){
+errorMessage.innerText=data.detail;
 
+return;
 
+}
 
-    if(files.length===0){
 
 
-        errorMessage.innerText =
-        "Please select at least one file";
+await loadUploadedFiles();
 
 
-        return;
 
+files=[];
 
-    }
+showFiles();
 
 
 
+errorMessage.innerText="";
 
 
 
+}
 
-    const user_id =
-    localStorage.getItem("user_id");
+catch(error){
 
 
+errorMessage.innerText="Server connection failed";
 
 
-
-    if(!user_id){
-
-
-        errorMessage.innerText =
-        "User not found. Please create account again";
-
-
-        return;
-
-
-    }
-
-
-
-
-
-
-
-
-    let formData =
-    new FormData();
-
-
-
-
-
-
-
-    files.forEach(file=>{
-
-
-        formData.append(
-            "files",
-            file
-        );
-
-
-    });
-
-
-
-
-
-
-
-    formData.append(
-        "user_id",
-        user_id
-    );
-
-
-
-
-
-
-
-
-    try{
-
-
-
-        let response =
-        await fetch(
-
-        "http://127.0.0.1:8000/uploadfiles",
-
-        {
-
-            method:"POST",
-
-            body:formData
-
-        }
-
-        );
-
-
-
-
-
-
-
-        let data =
-        await response.json();
-
-
-
-
-
-
-
-        if(!response.ok){
-
-
-            errorMessage.innerText =
-            data.detail;
-
-
-            return;
-
-
-        }
-
-
-
-
-
-
-
-        console.log(data);
-
-
-
-
-        window.location.href =
-        "dashboard.html";
-
-
-
-
-
-    }
-
-    catch(error){
-
-
-        console.log(error);
-
-
-        errorMessage.innerText =
-        "Server connection failed";
-
-
-    }
-
-
+}
 
 
 
