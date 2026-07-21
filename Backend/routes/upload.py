@@ -35,3 +35,9 @@ async def uploadfiles(files:List[UploadFile],user_id:str=Form()):
     except Exception as e:
         raise HTTPException(status_code=500,detail="Internal Server Error while uploading files")
     
+
+
+# @app.get('/uploadedfiles/{user_id}')
+# def uploadedfiles(user_id):
+#     try:
+
