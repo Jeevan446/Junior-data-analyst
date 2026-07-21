@@ -3,7 +3,6 @@ const wordCount = document.getElementById("word-count");
 const errorMessage = document.getElementById("error-message");
 
 
-
 description.addEventListener("input", function(){
 
     let words = description.value
@@ -12,11 +11,8 @@ description.addEventListener("input", function(){
     .filter(word => word.length > 0);
 
 
-
     if(description.value.trim()===""){
-
         words=[];
-
     }
 
 
@@ -24,43 +20,92 @@ description.addEventListener("input", function(){
 
 
     if(words.length > 100){
-
         errorMessage.innerText =
         "Description cannot contain more than 100 words";
-
     }
     else{
-
         errorMessage.innerText="";
-
     }
-
 
 });
 
 
 
+async function createUser(company, descriptionText){
 
-function startAnalysis(){
+    let userData = {
+        company_type: company,
+        company_description: descriptionText
+    };
 
 
-    let name =
-    document.getElementById("name").value;
+    try{
 
+        let response = await fetch(
+            "http://127.0.0.1:8000/createuser",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify(userData)
+            }
+        );
+
+
+        let data = await response.json();
+
+
+        if(!response.ok){
+
+            errorMessage.innerText = data.detail;
+            return false;
+
+        }
+
+
+        localStorage.setItem(
+            "user_id",
+            data.user.user_id
+        );
+
+
+        return true;
+
+
+    }
+    catch(error){
+
+        console.log(error);
+
+        errorMessage.innerText =
+        "Unable to connect with server";
+
+        return false;
+    }
+
+}
+
+
+
+
+async function startAnalysis(){
 
     let company =
-    document.getElementById("company").value;
+    document.getElementById("company")
+    .value
+    .trim();
 
 
     let descriptionText =
     description.value.trim();
 
 
-
     let words = descriptionText
     .split(/\s+/)
     .filter(word => word.length > 0);
-
 
 
     if(descriptionText !== "" && words.length > 100){
@@ -73,42 +118,33 @@ function startAnalysis(){
     }
 
 
-
-    let userData={
-
-        name:name,
-
-        company:company,
-
-        description:descriptionText
-
-    };
-
-
-
-    localStorage.setItem(
-        "userInfo",
-        JSON.stringify(userData)
+    let success = await createUser(
+        company,
+        descriptionText
     );
 
 
+    if(success){
 
-    window.location.href="analysis.html";
-
+        window.location.href="analysis.html";
+    }
 
 }
 
 
 
 
+async function skipInfo(){
 
-function skipInfo(){
+    let success = await createUser(
+        "",
+        ""
+    );
 
 
-    localStorage.removeItem("userInfo");
+    if(success){
 
-
-    window.location.href="analysis.html";
-
+        window.location.href="analysis.html";
+    }
 
 }
