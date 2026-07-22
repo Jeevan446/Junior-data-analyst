@@ -4,6 +4,8 @@ import random
 import string
 from database.queries import search_user,add_users
 from core.files_to_dataframes1 import file_to_df
+from outputs.clean_filename import clean_filename
+from typing import List
 
 router=APIRouter()
 
@@ -55,29 +57,50 @@ def create_new_user(user:User):
         raise HTTPException(status_code=500,detail="Internal Server Error While creating user")
 
 
-class Usermetadata(BaseModel):
-    id:str
+class User(BaseModel):
+    user_id: str
+    filenames: List[str]
    
         
 @router.post('/analyze')
-def analyze(usermetadata:Usermetadata):
+def analyze(user: User):
+
     try:
-        is_user=search_user(usermetadata.id)
+
+        is_user = search_user(user.user_id)
+
         if not is_user:
-            raise HTTPException(status_code=404,detail="Please add some files first")
-        file_to_df(usermetadata.id)
-        
-        return {"sucess":True,"message":"User files found sucessfully"}
-        
-        
+            raise HTTPException(
+                status_code=404,
+                detail="Please add some files first"
+            )
+
+        arr = []
+
+        for filename in user.filenames:
+
+            cleaned_file_name = clean_filename(filename)
+
+            combined_filename = (
+                user.user_id + '&' + cleaned_file_name
+            )
+
+            arr.append(combined_filename)
+        file_to_df(arr, user.user_id)
+
+        return {
+            "success": True,
+            "message": "User files found successfully"
+        }
+
     except HTTPException:
         raise
     except Exception as e:
-        print("Error while analyzing data",e)
-        raise HTTPException(status_code=500,detail="Internal server error while analyzing")
-
-   
-
+        print("Error while analyzing data", e)
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error while analyzing"
+        )
    
     
 
