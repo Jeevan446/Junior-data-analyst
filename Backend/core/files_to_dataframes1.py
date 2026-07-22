@@ -15,8 +15,11 @@ def file_to_df(file_name_arr,user_id):
             if path.suffix==".csv":
                 df=pd.read_csv(folder_file_path)
 
-            elif path.suffix in [".xlsx",".xls"]:
-                df=pd.read_excel(folder_file_path)
+            elif path.suffix == ".xlsx":
+                df = pd.read_excel(folder_file_path, engine="openpyxl")
+
+            elif path.suffix == ".xls":
+                df = pd.read_excel(folder_file_path, engine="xlrd")
 
             else:
                 continue
