@@ -1,0 +1,566 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+body {
+
+    background:#f8fafc;
+    color:#172033;
+
+}
+
+
+/* Header */
+
+header {
+
+    background:white;
+
+    padding:18px 7%;
+
+    border-bottom:1px solid #e2e8f0;
+
+}
+
+
+.logo {
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+
+.logo span {
+
+    color:#2563eb;
+
+}
+
+
+
+/* Main container */
+
+.container {
+
+    width:85%;
+
+    max-width:1000px;
+
+    margin:35px auto;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+}
+
+
+
+/* Panels */
+
+.left-panel,
+.right-panel {
+
+    background:white;
+
+    padding:22px;
+
+    border-radius:16px;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+
+}
+
+
+h2 {
+
+    font-size:22px;
+
+    margin-bottom:8px;
+
+}
+
+
+p {
+
+    font-size:14px;
+
+    color:#64748b;
+
+    line-height:1.5;
+
+    margin-bottom:18px;
+
+}
+
+
+
+/* ==========================
+   AVAILABLE FILES
+========================== */
+
+
+#all-files {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    max-height:420px;
+
+    overflow-y:auto;
+
+    padding-right:5px;
+
+}
+
+
+#all-files::-webkit-scrollbar {
+
+    width:6px;
+
+}
+
+
+#all-files::-webkit-scrollbar-thumb {
+
+    background:#cbd5e1;
+
+    border-radius:10px;
+
+}
+
+
+
+/* File card */
+
+
+.file-card {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:14px 15px;
+
+    background:#ffffff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+
+.file-card:hover {
+
+    border-color:#2563eb;
+
+    background:#f8fbff;
+
+    transform:translateX(4px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.10);
+
+}
+
+
+
+/* File icon */
+
+
+.file-card i {
+
+    width:38px;
+
+    height:38px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:10px;
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+    font-size:18px;
+
+}
+
+
+
+/* File name */
+
+
+.file-name {
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#1e293b;
+
+}
+
+
+
+.file-details {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+.file-size {
+
+    font-size:12px;
+
+    color:#64748b;
+
+    margin-top:3px;
+
+}
+
+
+
+
+/* ==========================
+   DROP AREA
+========================== */
+
+
+.drop-area {
+
+    min-height:260px;
+
+    border:2px dashed #93c5fd;
+
+    border-radius:15px;
+
+    background:#eff6ff;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:15px;
+
+    transition:.3s;
+
+}
+
+
+.drop-area:hover {
+
+    background:#dbeafe;
+
+    border-color:#2563eb;
+
+}
+
+
+
+.drop-message {
+
+    text-align:center;
+
+}
+
+
+.drop-message i {
+
+    font-size:38px;
+
+    color:#2563eb;
+
+    margin-bottom:10px;
+
+}
+
+
+.drop-message p {
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+
+
+/* ==========================
+   SELECTED FILES
+========================== */
+
+
+#selected-files {
+
+    width:100%;
+
+    margin-top:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+
+
+
+.selected-file {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:12px 14px;
+
+    background:white;
+
+    border-radius:12px;
+
+    border:1px solid #dbeafe;
+
+    animation:slide .25s ease;
+
+    transition:.25s;
+
+}
+
+
+
+.selected-file:hover {
+
+    border-color:#2563eb;
+
+    box-shadow:0 5px 15px rgba(37,99,235,.12);
+
+}
+
+
+
+.selected-file span {
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+
+/* ==========================
+   REMOVE BUTTON
+========================== */
+
+
+.remove-btn {
+
+    width:30px;
+
+    height:30px;
+
+    border:none;
+
+    border-radius:9px;
+
+    background:#f1f5f9;
+
+    color:#64748b;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+
+.remove-btn i {
+
+    font-size:14px;
+
+}
+
+
+
+.remove-btn:hover {
+
+    background:#ef4444;
+
+    color:white;
+
+    transform:rotate(90deg) scale(1.08);
+
+}
+
+
+
+/* ==========================
+   ERROR
+========================== */
+
+
+#error-message {
+
+    color:#dc2626;
+
+    font-size:13px;
+
+    margin-top:12px;
+
+}
+
+
+
+/* ==========================
+   BUTTON
+========================== */
+
+
+.analyze-btn {
+
+    width:100%;
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.analyze-btn:hover {
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+
+}
+
+
+
+/* Animation */
+
+
+@keyframes slide {
+
+    from {
+
+        opacity:0;
+
+        transform:translateX(15px);
+
+    }
+
+    to {
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+#p{
+    color: #264f6d;
+    font-size: 15px;
+    
+}
+
+
+/* Responsive */
+
+
+@media(max-width:850px){
+
+    .container {
+
+        grid-template-columns:1fr;
+
+        width:92%;
+
+    }
+
+}
+
+
+
+@media(max-width:500px){
+
+    .container {
+
+        margin:20px auto;
+
+    }
+
+
+    .left-panel,
+    .right-panel {
+
+        padding:18px;
+
+    }
+
+}

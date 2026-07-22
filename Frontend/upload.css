@@ -318,7 +318,8 @@ flex-direction:column;
 
 
 .upload-section{
-
+display: flex;
+flex-direction: column;
 width:100%;
 
 }
@@ -328,6 +329,7 @@ width:100%;
 
 width:100%;
 
+
 }
 
 
@@ -335,7 +337,30 @@ width:100%;
 
 font-size:35px;
 
+
 }
 
+
+}
+
+.analysis-btn{
+
+margin-top:15px;
+padding:14px;
+border:none;
+border-radius:8px;
+background:rgb(22, 22, 50);
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-left: 10%;
+
+width:80%;
+
+}
+
+.analysis-btn:hover{
+
+background:#15803d;
 
 }

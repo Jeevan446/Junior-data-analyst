@@ -9,7 +9,7 @@ const uploadedFiles=document.getElementById("uploaded-files");
 const errorMessage=document.getElementById("error-message");
 
 const analyzeButton=document.getElementById("analyze-btn");
-
+const analysisButton=document.getElementById("analysis-btn");
 
 let files=[];
 
@@ -115,7 +115,58 @@ showFiles();
 
 
 
+analyzeButton.addEventListener("click",uploadFiles);
+analysisButton.addEventListener("click",goToAnalysis);
 
+async function goToAnalysis(){
+
+let user_id=localStorage.getItem("user_id");
+
+if(!user_id){
+
+errorMessage.innerText="User not found";
+
+return;
+
+}
+
+try{
+
+let response=await fetch(
+
+`http://127.0.0.1:8000/uploadedfiles/${user_id}`
+
+);
+
+let data=await response.json();
+
+if(!response.ok){
+
+errorMessage.innerText=data.detail;
+
+return;
+
+}
+
+if(data.filenames.length===0){
+
+errorMessage.innerText="Please upload at least one file first";
+
+return;
+
+}
+
+window.location.href="selectfiles.html";
+
+}
+
+catch(error){
+
+errorMessage.innerText="Server connection failed";
+
+}
+
+}
 
 function showFiles(){
 
