@@ -62,11 +62,9 @@ class User(BaseModel):
     filenames: List[str]
    
         
-@router.post('/analyze')
+@router.post('/user/file/qualitycheck')
 def analyze(user: User):
-
     try:
-
         is_user = search_user(user.user_id)
 
         if not is_user:
