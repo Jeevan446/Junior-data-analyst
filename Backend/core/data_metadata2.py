@@ -1,5 +1,6 @@
 import pandas as pd
 # from .files_to_dataframes1 import file_to_df
+from .data_qualitycheck3 import check_data_quality
 
 def metadata_extraction(df_arr):
     try:
@@ -41,6 +42,7 @@ def random_row(df_arr):
     try:
         for df_dict in df_arr:
             df_dict['random_data']=df_dict['dataframe'].sample().to_dict()
-        print(df_arr)
+        # print(df_arr)
+        check_data_quality(df_arr)
     except Exception as e:
         print("Error while extracting random row ",e)
