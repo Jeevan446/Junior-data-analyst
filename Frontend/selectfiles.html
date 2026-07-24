@@ -17,7 +17,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -40,21 +42,19 @@ Insight<span>Flow</span>
 
 <div class="left-panel">
 
-<h2>
 
-Available Files
+<h2>Available Files</h2>
 
-</h2>
 
 <p id="p">
 
-Drag and Drop related files in the box to analysis the quality of files .
+Drag and Drop related files in the box to analyze the quality of files.
 
 </p>
 
-<div id="all-files">
 
-</div>
+<div id="all-files"></div>
+
 
 </div>
 
@@ -64,58 +64,133 @@ Drag and Drop related files in the box to analysis the quality of files .
 
 <div class="right-panel">
 
-<h2>
 
-Selected Files
+<h2>Selected Files</h2>
 
-</h2>
 
 <p>
 
-Drop files here to start your analysis the quality of files.
+Drop files here to start your analysis.
 
 </p>
 
-<div
-id="drop-area"
-class="drop-area">
+
+
+<div id="drop-area" class="drop-area">
+
 
 <div class="drop-message">
 
 <i class="fa-solid fa-cloud-arrow-down"></i>
 
-<p>
-
-Drag files here
-
-</p>
+<p>Drag files here</p>
 
 </div>
 
-<div id="selected-files">
+
+
+<div id="selected-files"></div>
+
 
 </div>
 
-</div>
+
 
 <p id="error-message"></p>
 
-<button
-id="analyze-btn"
-class="analyze-btn">
 
-Check quality
+
+<button id="analyze-btn" class="analyze-btn">
+
+Check Quality
 
 </button>
 
-</div>
 
+
+</div>
 
 
 </section>
 
 
+
+
+
+<!-- SUCCESS POPUP -->
+
+
+<div id="success-modal" class="modal">
+
+
+<div class="modal-box">
+
+
+<div class="success-icon">
+
+<i class="fa-solid fa-check"></i>
+
+</div>
+
+
+
+<h2>
+
+Analysis Completed
+
+</h2>
+
+
+
+<p>
+
+Data quality analysis successfully completed.
+
+</p>
+
+
+
+<div class="modal-actions">
+
+
+<button 
+id="check-quality-btn"
+class="primary-btn">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Check Data Quality
+
+</button>
+
+
+
+
+<button 
+id="skip-quality-btn"
+class="secondary-btn">
+
+<i class="fa-solid fa-forward"></i>
+
+Skip Data  Analysis
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
 <script src="selectfiles.js"></script>
+
 
 </body>
 

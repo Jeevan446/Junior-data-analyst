@@ -8,13 +8,19 @@ const analyzeButton = document.getElementById("analyze-btn");
 
 const errorMessage = document.getElementById("error-message");
 
+const successModal = document.getElementById("success-modal");
+
+const checkQualityBtn = document.getElementById("check-quality-btn");
+
+const skipQualityBtn = document.getElementById("skip-quality-btn");
+
 
 let draggedFile = "";
 
 let selectedFiles = [];
 
 
-// Load files when page opens
+
 window.onload = function () {
 
     loadUploadedFiles();
@@ -23,7 +29,7 @@ window.onload = function () {
 
 
 
-// Fetch uploaded files
+
 async function loadUploadedFiles() {
 
 
@@ -82,7 +88,7 @@ async function loadUploadedFiles() {
             let div = document.createElement("div");
 
 
-            div.className = "file";
+            div.className = "file-card";
 
 
             div.draggable = true;
@@ -91,9 +97,19 @@ async function loadUploadedFiles() {
 
             div.innerHTML = `
 
-                <i class="fa-solid fa-file"></i>
+                <div class="file-details">
 
-                <span>${filename}</span>
+                    <i class="fa-solid fa-file"></i>
+
+                    <div>
+
+                        <div class="file-name">
+                            ${filename}
+                        </div>
+
+                    </div>
+
+                </div>
 
             `;
 
@@ -138,7 +154,6 @@ async function loadUploadedFiles() {
 
 
 
-// Drag over event
 
 dropArea.addEventListener(
     "dragover",
@@ -154,7 +169,6 @@ dropArea.addEventListener(
 
 
 
-// Drag leave event
 
 dropArea.addEventListener(
     "dragleave",
@@ -168,7 +182,6 @@ dropArea.addEventListener(
 
 
 
-// Drop file
 
 dropArea.addEventListener(
     "drop",
@@ -190,7 +203,6 @@ dropArea.addEventListener(
 
 
 
-// Add selected file
 
 function addSelectedFile(filename){
 
@@ -224,7 +236,8 @@ function addSelectedFile(filename){
 
 
 
-// Display selected files
+
+
 
 function renderSelectedFiles(){
 
@@ -305,7 +318,7 @@ function renderSelectedFiles(){
 
 
 
-// Remove selected file
+
 
 function removeFile(index){
 
@@ -325,7 +338,8 @@ window.removeFile = removeFile;
 
 
 
-// Analyze button
+
+
 
 analyzeButton.addEventListener(
     "click",
@@ -336,7 +350,7 @@ analyzeButton.addEventListener(
 
 
 
-// Send selected files to FastAPI
+
 
 async function startAnalysis(){
 
@@ -378,6 +392,7 @@ async function startAnalysis(){
 
 
     try{
+
 
 
         let response = await fetch(
@@ -440,18 +455,10 @@ async function startAnalysis(){
 
 
 
-        console.log("Selected files:",
-            selectedFiles);
+        console.log(data);
 
 
-
-        console.log("Server response:",
-            data);
-
-
-
-        // window.location.href =
-        //     ".html";
+        successModal.style.display="flex";
 
 
 
@@ -475,3 +482,55 @@ async function startAnalysis(){
 
 
 }
+
+
+
+
+
+
+
+checkQualityBtn.addEventListener(
+"click",
+function(){
+
+
+    window.location.href =
+    "qualityreport.html";
+
+
+});
+
+
+
+
+
+
+
+skipQualityBtn.addEventListener(
+"click",
+function(){
+
+
+    successModal.style.display="none";
+
+
+});
+
+
+
+
+
+
+successModal.addEventListener(
+"click",
+function(e){
+
+
+    if(e.target === successModal){
+
+        successModal.style.display="none";
+
+    }
+
+
+});
