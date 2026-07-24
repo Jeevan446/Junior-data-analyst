@@ -1,22 +1,15 @@
 const allFiles = document.getElementById("all-files");
-
 const selectedFilesContainer = document.getElementById("selected-files");
-
 const dropArea = document.getElementById("drop-area");
-
 const analyzeButton = document.getElementById("analyze-btn");
-
 const errorMessage = document.getElementById("error-message");
 
 const successModal = document.getElementById("success-modal");
-
 const checkQualityBtn = document.getElementById("check-quality-btn");
-
 const skipQualityBtn = document.getElementById("skip-quality-btn");
 
 
 let draggedFile = "";
-
 let selectedFiles = [];
 
 
@@ -39,7 +32,6 @@ async function loadUploadedFiles() {
     if (!user_id) {
 
         errorMessage.innerText = "User not found";
-
         return;
 
     }
@@ -62,7 +54,6 @@ async function loadUploadedFiles() {
         if (!response.ok) {
 
             errorMessage.innerText = data.detail;
-
             return;
 
         }
@@ -74,7 +65,6 @@ async function loadUploadedFiles() {
 
             allFiles.innerHTML =
                 "<p>No uploaded files found</p>";
-
 
             return;
 
@@ -204,6 +194,7 @@ dropArea.addEventListener(
 
 
 
+
 function addSelectedFile(filename){
 
 
@@ -217,7 +208,6 @@ function addSelectedFile(filename){
 
     if(selectedFiles.includes(filename)){
 
-
         return;
 
     }
@@ -225,7 +215,6 @@ function addSelectedFile(filename){
 
 
     selectedFiles.push(filename);
-
 
 
     renderSelectedFiles();
@@ -332,7 +321,6 @@ function removeFile(index){
 }
 
 
-
 window.removeFile = removeFile;
 
 
@@ -345,6 +333,8 @@ analyzeButton.addEventListener(
     "click",
     startAnalysis
 );
+
+
 
 
 
@@ -434,7 +424,9 @@ async function startAnalysis(){
 
 
 
+
         let data = await response.json();
+
 
 
 
@@ -456,6 +448,15 @@ async function startAnalysis(){
 
 
         console.log(data);
+
+
+
+        // Save quality id
+        localStorage.setItem(
+            "quality_id",
+            data.quality_id
+        );
+
 
 
         successModal.style.display="flex";
@@ -489,9 +490,30 @@ async function startAnalysis(){
 
 
 
+
+
 checkQualityBtn.addEventListener(
 "click",
 function(){
+
+
+    const quality_id =
+        localStorage.getItem("quality_id");
+
+
+
+    if(!quality_id){
+
+
+        errorMessage.innerText =
+            "Quality ID not found";
+
+
+        return;
+
+
+    }
+
 
 
     window.location.href =
@@ -499,6 +521,7 @@ function(){
 
 
 });
+
 
 
 
@@ -515,6 +538,7 @@ function(){
 
 
 });
+
 
 
 
