@@ -1,6 +1,6 @@
 from .connection import db_connect   
 import psycopg
-
+import json 
  
 # create user table
 def user_table():
@@ -169,7 +169,7 @@ def fetch_filenames(user_id):
 
 
 
-def create_quality_table(user_id,file_quality_details):
+def create_quality_table():
     try:
         conn=None
         cursor=None
@@ -197,4 +197,49 @@ def create_quality_table(user_id,file_quality_details):
         if conn:
             conn.close()
 
-  
+def file_qualityid_exists(quality_id):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        SELECT* FROM quality
+        WHERE quality_id=%s
+        ''',(quality_id,))
+        data=cursor.fetchone()
+        return data
+    except Exception as e:
+        print("Error while checking quality id")
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+def add_file_quality_info(user_id,quality_id,quality_arr):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        for single_data_quality in quality_arr:
+            cursor.execute('''
+            INSERT INTO quality(user_id,quality_id,filename,missing_values,empty_strings,duplicate_rows)
+            VALUES(%s,%s,%s,%s,%s,%s)
+            
+            ''',(user_id,quality_id,single_data_quality['filename'],json.dumps(single_data_quality['Missing values']),json.dumps(single_data_quality['Empty strings']),json.dumps(single_data_quality['duplicate rows']))
+            )
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("Error while adding file quality information")
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
