@@ -2,7 +2,7 @@ from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel,Field
 import random
 import string
-from database.queries import search_user,add_users,file_qualityid_exists,add_file_quality_info,create_quality_table
+from database.queries import search_user,add_users,file_qualityid_exists,add_file_quality_info,create_quality_table, get_all_files_quality
 from core.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
@@ -115,7 +115,38 @@ def analyze(user: User):
             detail="Internal server error while analyzing"
         )
    
-    
+
+@router.get('/user/files/qualities/{quality_id}')
+def files_quality(quality_id):
+    try:
+        files_quality= get_all_files_quality(quality_id)
+        # print(files_quality)
+        
+        # converting tuples send by db to python dictonary
+        quality_arr=[]
+        for file_quality in files_quality:
+        
+            # print(file_quality[0])
+            quality_dict={
+                'user_id':file_quality[0],
+                'quality_id':file_quality[1],
+                'movie name':file_quality[2],
+                'missing values':file_quality[3],
+                'empty strings':file_quality[4],
+                'duplicated rows':file_quality[5]
+            }
+            quality_arr.append(quality_dict)
+
+
+        return{
+            "sucess" :True,
+             "files quality":quality_arr
+        }
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500,detail="Internal server error while getting files quality")
+
+
 
 
 # @router.get('/users')

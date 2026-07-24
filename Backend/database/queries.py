@@ -255,6 +255,7 @@ def get_all_files_quality(quality_id):
         WHERE quality_id=%s
         ''',(quality_id,))
         data=cursor.fetchall()
+        return data
     except Exception as e:
         print("Error while getting all file quality")
         raise
@@ -263,4 +264,3 @@ def get_all_files_quality(quality_id):
             cursor.close()
         if conn:
             conn.close()
-            
