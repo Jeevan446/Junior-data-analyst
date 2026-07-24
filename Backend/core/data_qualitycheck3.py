@@ -33,15 +33,18 @@ def check_empty_strings(df_arr):
 def check_duplicated(df_arr):
     try:
         for df_dict in df_arr:
-            df_dict['data_quality']['duplicate columns']=int(df_dict['dataframe'].duplicated().sum())
+            df_dict['data_quality']['duplicate rows']=int(df_dict['dataframe'].duplicated().sum())
         # print(df_arr)
         
          
         # sending data quality report for frontend
         sending_arr=[]
         for df_dict in df_arr:
+            # print(df_dict)
             send_dict=df_dict['data_quality']
+            send_dict['filename']=df_dict['name']
             sending_arr.append(send_dict)
+        print(sending_arr)
         return(sending_arr)
 
     except Exception as e:

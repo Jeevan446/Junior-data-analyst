@@ -167,5 +167,34 @@ def fetch_filenames(user_id):
         if conn:
             conn.close()
 
-    
 
+
+def create_quality_table(user_id,file_quality_details):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS quality(
+         user_id VARCHAR REFERENCES users(user_id)
+         quality_id VARCHAR PRIMARY KEY
+         filename VARCHAR 
+         missing_values JSONB
+         empty_strings JSONB
+         duplicate_rows JSONB
+
+        )
+        ''')
+        conn.commit()
+
+    except Exception as e:
+        print("Error while creating quality table",e)
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+  

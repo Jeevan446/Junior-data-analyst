@@ -86,7 +86,7 @@ def analyze(user: User):
             arr.append(combined_filename)
         d=file_to_df(arr, user.user_id)
        
-
+        print (d)
         return {
             "success": True,
             "message": "User files found successfully",
