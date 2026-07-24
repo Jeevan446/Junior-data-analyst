@@ -84,11 +84,13 @@ def analyze(user: User):
             )
 
             arr.append(combined_filename)
-        file_to_df(arr, user.user_id)
+        d=file_to_df(arr, user.user_id)
+       
 
         return {
             "success": True,
-            "message": "User files found successfully"
+            "message": "User files found successfully",
+            "data":d
         }
 
     except HTTPException:

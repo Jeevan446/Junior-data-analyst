@@ -31,7 +31,7 @@ def file_to_df(file_name_arr,user_id):
             dfs.append(df_obj)
 
         # print(dfs)
-        metadata_extraction(dfs)
+        return metadata_extraction(dfs)
 
     except Exception as e:
         print("Error while converting files to dataframes",e)
