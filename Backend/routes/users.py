@@ -2,7 +2,7 @@ from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel,Field
 import random
 import string
-from database.queries import search_user,add_users
+from database.queries import search_user,add_users,file_qualityid_exists,add_file_quality_info,create_quality_table
 from core.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
@@ -65,6 +65,7 @@ class User(BaseModel):
 @router.post('/user/file/qualitycheck')
 def analyze(user: User):
     try:
+        create_quality_table()
         is_user = search_user(user.user_id)
 
         if not is_user:
@@ -84,13 +85,25 @@ def analyze(user: User):
             )
 
             arr.append(combined_filename)
-        d=file_to_df(arr, user.user_id)
+        
+        quality_arr=file_to_df(arr, user.user_id)
+
+
+        while True:
+            quality_id=randomstring()
+            is_quality_id_exists=file_qualityid_exists(quality_id)
+            if not is_quality_id_exists:
+                break
+        
+        add_file_quality_info(user.user_id,quality_id,quality_arr)
+
+
        
-        print (d)
+        # print (d)
         return {
             "success": True,
             "message": "User files found successfully",
-            "data":d
+            "quality_id":quality_id
         }
 
     except HTTPException:

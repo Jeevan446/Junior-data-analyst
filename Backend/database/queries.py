@@ -177,11 +177,11 @@ def create_quality_table():
         cursor=conn.cursor()
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS quality(
-         user_id VARCHAR REFERENCES users(user_id)
-         quality_id VARCHAR PRIMARY KEY
-         filename VARCHAR 
-         missing_values JSONB
-         empty_strings JSONB
+         user_id VARCHAR REFERENCES users(user_id),
+         quality_id VARCHAR,
+         filename VARCHAR ,
+         missing_values JSONB,
+         empty_strings JSONB,
          duplicate_rows JSONB
 
         )
@@ -232,6 +232,7 @@ def add_file_quality_info(user_id,quality_id,quality_arr):
             
             ''',(user_id,quality_id,single_data_quality['filename'],json.dumps(single_data_quality['Missing values']),json.dumps(single_data_quality['Empty strings']),json.dumps(single_data_quality['duplicate rows']))
             )
+            conn.commit()
     except Exception as e:
         if conn:
             conn.rollback()
@@ -243,3 +244,23 @@ def add_file_quality_info(user_id,quality_id,quality_arr):
         if conn:
             conn.close()
     
+def get_all_files_quality(quality_id):
+    try:
+        conn=None
+        cursor=None
+        conn=db_connect()
+        cursor=conn.cursor()
+        cursor.execute('''
+        SELECT* From quality
+        WHERE quality_id=%s
+        ''',(quality_id,))
+        data=cursor.fetchall()
+    except Exception as e:
+        print("Error while getting all file quality")
+        raise
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
