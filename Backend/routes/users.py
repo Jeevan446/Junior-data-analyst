@@ -6,9 +6,9 @@ from database.queries import search_user,add_users,file_qualityid_exists,add_fil
 from core.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
+from llm.testing import testing
 
 router=APIRouter()
-
 
 
 def randomstring():
@@ -124,6 +124,7 @@ def files_quality(quality_id):
         
         # converting tuples send by db to python dictonary
         quality_arr=[]
+        # testing()
         for file_quality in files_quality:
         
             # print(file_quality[0])
