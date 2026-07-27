@@ -93,6 +93,7 @@ async function createUser(company, descriptionText){
 
 async function startAnalysis(){
 
+    document.getElementById("loader").style.display = "flex";
     let company =
     document.getElementById("company")
     .value
@@ -130,8 +131,9 @@ async function startAnalysis(){
     }
 
 }
-
-
+window.addEventListener("pageshow", function(){
+    document.getElementById("loader").style.display = "none";
+});
 
 
 async function skipInfo(){
