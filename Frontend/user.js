@@ -85,6 +85,7 @@ async function createUser(company, descriptionText){
 
         return false;
     }
+    
 
 }
 
@@ -93,7 +94,7 @@ async function createUser(company, descriptionText){
 
 async function startAnalysis(){
 
-    document.getElementById("loader").style.display = "flex";
+   
     let company =
     document.getElementById("company")
     .value
@@ -117,6 +118,7 @@ async function startAnalysis(){
         return;
 
     }
+     document.getElementById("loader").style.display = "flex";
 
 
     let success = await createUser(
@@ -128,6 +130,11 @@ async function startAnalysis(){
     if(success){
 
         window.location.href="upload.html";
+    }
+    else{
+
+        document.getElementById("loader").style.display = "none";
+
     }
 
 }
@@ -147,6 +154,11 @@ async function skipInfo(){
     if(success){
 
         window.location.href="upload.html";
+    }
+     else{
+
+        document.getElementById("loader").style.display = "none";
+
     }
 
 }
