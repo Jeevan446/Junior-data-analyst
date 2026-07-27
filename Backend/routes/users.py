@@ -6,7 +6,8 @@ from database.queries import search_user,add_users,file_qualityid_exists,add_fil
 from core.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
-from llm.testing import testing
+from llm.dataqualityanalysis import quality_ai_summary
+
 
 router=APIRouter()
 
@@ -119,6 +120,7 @@ def analyze(user: User):
 @router.get('/user/files/qualities/{quality_id}')
 def files_quality(quality_id):
     try:
+        quality_ai_summary(quality_id)
         files_quality= get_all_files_quality(quality_id)
         # print(files_quality)
         

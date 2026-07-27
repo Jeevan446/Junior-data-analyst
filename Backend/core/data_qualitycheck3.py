@@ -44,7 +44,7 @@ def check_duplicated(df_arr):
             send_dict=df_dict['data_quality']
             send_dict['filename']=df_dict['name']
             sending_arr.append(send_dict)
-        print(sending_arr)
+        # print(sending_arr)
         return(sending_arr)
 
     except Exception as e:
