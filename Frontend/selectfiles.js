@@ -344,7 +344,7 @@ analyzeButton.addEventListener(
 
 async function startAnalysis(){
 
-
+   
 
     if(selectedFiles.length === 0){
 
@@ -379,7 +379,7 @@ async function startAnalysis(){
     }
 
 
-
+document.getElementById("loader").style.display = "flex";
 
     try{
 
@@ -480,12 +480,15 @@ async function startAnalysis(){
 
 
     }
+       document.getElementById("loader").style.display = "none";
 
 
 }
 
 
-
+window.addEventListener("pageshow", function(){
+    document.getElementById("loader").style.display = "none";
+});
 
 
 

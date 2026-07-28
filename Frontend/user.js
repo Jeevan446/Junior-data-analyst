@@ -85,6 +85,7 @@ async function createUser(company, descriptionText){
 
         return false;
     }
+    
 
 }
 
@@ -93,6 +94,7 @@ async function createUser(company, descriptionText){
 
 async function startAnalysis(){
 
+   
     let company =
     document.getElementById("company")
     .value
@@ -116,6 +118,7 @@ async function startAnalysis(){
         return;
 
     }
+     document.getElementById("loader").style.display = "flex";
 
 
     let success = await createUser(
@@ -128,10 +131,16 @@ async function startAnalysis(){
 
         window.location.href="upload.html";
     }
+    else{
+
+        document.getElementById("loader").style.display = "none";
+
+    }
 
 }
-
-
+window.addEventListener("pageshow", function(){
+    document.getElementById("loader").style.display = "none";
+});
 
 
 async function skipInfo(){
@@ -145,6 +154,11 @@ async function skipInfo(){
     if(success){
 
         window.location.href="upload.html";
+    }
+     else{
+
+        document.getElementById("loader").style.display = "none";
+
     }
 
 }
