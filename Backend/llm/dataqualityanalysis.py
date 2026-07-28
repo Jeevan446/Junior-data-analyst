@@ -478,7 +478,7 @@ Some important information is still missing.
 
 Most important information is available.
 
-Some optional information is empty, which is generally acceptable.
+Some optional informati on is empty, which is generally acceptable.
 
 Repeated records are low and unlikely to affect the results.
 
@@ -492,7 +492,7 @@ Generate only the final report.
 """
 
 
-def quality_ai_summary(quality_id):
+def  quality_ai_summary(quality_id):
     try:
         users_filequality_info=get_all_files_quality(quality_id)
         USER_PROMPT=users_filequality_info
@@ -517,6 +517,12 @@ def quality_ai_summary(quality_id):
 
         data = response.json()
 
-        print(data["message"]["content"])
+        d=data["message"]["content"]
+        print(d)
+        # print(d)
+        return d
     except Exception as e:
-        print("Error while testing llm")
+        print("Error while testing llm",e)
+        
+
+

@@ -120,7 +120,7 @@ def analyze(user: User):
 @router.get('/user/files/qualities/{quality_id}')
 def files_quality(quality_id):
     try:
-        quality_ai_summary(quality_id)
+       
         files_quality= get_all_files_quality(quality_id)
         # print(files_quality)
         
@@ -139,16 +139,28 @@ def files_quality(quality_id):
                 'duplicated rows':file_quality[5]
             }
             quality_arr.append(quality_dict)
-
+           
 
         return{
             "sucess" :True,
-             "files quality":quality_arr
+             "files quality":quality_arr,
+
         }
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500,detail="Internal server error while getting files quality")
 
+@router.get('/table/aisummary')
+def ai_summary(quality_id:str):
+    try:
+        ai_summery=quality_ai_summary(quality_id)
+        print(ai_summery)
+        return {
+            "sucess":True,
+            "AI_summary":ai_summery
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500,detail="Error while getting ai summary")
 
 
 
