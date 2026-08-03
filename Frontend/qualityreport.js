@@ -10,7 +10,8 @@ const aiContainer = document.getElementById("ai-summary-container");
 let qualityId = localStorage.getItem("quality_id");
 
 
-window.onload = function(){
+
+window.onload = function () {
 
     loadQualityReport();
 
@@ -18,17 +19,21 @@ window.onload = function(){
 
 
 
-async function loadQualityReport(){
 
-    if(!qualityId){
 
-        errorMessage.innerText="Quality ID not found";
+async function loadQualityReport() {
+
+
+    if (!qualityId) {
+
+        errorMessage.innerText = "Quality ID not found";
         return;
 
     }
 
 
-    try{
+    try {
+
 
         const response = await fetch(
             `http://127.0.0.1:8000/user/files/qualities/${qualityId}`
@@ -38,25 +43,34 @@ async function loadQualityReport(){
         const data = await response.json();
 
 
-        if(!response.ok){
 
-            errorMessage.innerText=data.detail;
+        if (!response.ok) {
+
+            errorMessage.innerText = data.detail;
             return;
 
         }
 
 
+
         renderFiles(data["files quality"]);
 
 
-    }
-    catch(error){
 
-        errorMessage.innerText="Unable to connect with server";
+    }
+    catch(error) {
+
+
+        errorMessage.innerText =
+            "Unable to connect with server";
+
 
     }
 
 }
+
+
+
 
 
 
@@ -70,17 +84,22 @@ generateBtn.addEventListener(
 
 
 
-async function generateAISummary(){
 
 
-    generateBtn.disabled=true;
-
-    aiLoading.style.display="flex";
-
-    aiContainer.innerHTML="";
 
 
-    try{
+async function generateAISummary() {
+
+
+    generateBtn.disabled = true;
+
+    aiLoading.style.display = "flex";
+
+    aiContainer.innerHTML = "";
+
+
+
+    try {
 
 
         const response = await fetch(
@@ -88,12 +107,20 @@ async function generateAISummary(){
         );
 
 
+
         const data = await response.json();
+
+
+
+        console.log("API RESPONSE:", data);
+
 
 
         if(!response.ok){
 
-            throw new Error(data.detail);
+            throw new Error(
+                data.detail || "AI generation failed"
+            );
 
         }
 
@@ -101,22 +128,64 @@ async function generateAISummary(){
 
         if(!data.AI_summary){
 
-            throw new Error("AI summary is empty");
+            throw new Error(
+                "AI summary is empty"
+            );
 
         }
 
 
 
-        renderAISummary(
-            cleanAIText(data.AI_summary)
+        let report = data.AI_summary;
+
+
+
+        // if backend sends JSON string
+        if(typeof report === "string"){
+
+
+            report = cleanAIText(report);
+
+
+            report = JSON.parse(report);
+
+
+        }
+
+
+
+
+        // handle nested response
+        if(report.AI_summary){
+
+
+            report = report.AI_summary;
+
+
+        }
+
+
+
+
+        console.log(
+            "FINAL REPORT:",
+            report
         );
+
+
+
+        renderAISummary(report);
+
 
 
     }
     catch(error){
 
 
-        aiContainer.innerHTML=`
+        console.log(error);
+
+
+        aiContainer.innerHTML = `
 
         <div class="ai-card">
 
@@ -133,9 +202,9 @@ async function generateAISummary(){
     finally{
 
 
-        aiLoading.style.display="none";
+        aiLoading.style.display = "none";
 
-        generateBtn.disabled=false;
+        generateBtn.disabled = false;
 
 
     }
@@ -147,47 +216,68 @@ async function generateAISummary(){
 
 
 
+
+
+
+
 function renderFiles(files){
 
 
-    qualityContainer.innerHTML="";
+    qualityContainer.innerHTML = "";
+
+
+
+    if(!files || !Array.isArray(files)){
+
+        return;
+
+    }
+
 
 
     files.forEach(file=>{
 
 
         const clone =
-        fileTemplate.content.cloneNode(true);
+            fileTemplate.content.cloneNode(true);
 
 
 
         clone.querySelector(".file-name").innerText =
-        file["movie name"];
+            file["movie name"];
 
 
 
         clone.querySelector(".missing-total").innerText =
-        calculateTotal(file["missing values"]);
+            calculateTotal(
+                file["missing values"]
+            );
 
 
 
         clone.querySelector(".empty-total").innerText =
-        calculateTotal(file["empty strings"]);
+            calculateTotal(
+                file["empty strings"]
+            );
 
 
 
         clone.querySelector(".duplicate-total").innerText =
-        file["duplicated rows"];
+            file["duplicated rows"];
 
 
 
         clone.querySelector(".missing-table").innerHTML =
-        createTable(file["missing values"]);
+            createTable(
+                file["missing values"]
+            );
 
 
 
         clone.querySelector(".empty-table").innerHTML =
-        createTable(file["empty strings"]);
+            createTable(
+                file["empty strings"]
+            );
 
 
 
@@ -205,9 +295,22 @@ function renderFiles(files){
 
 
 
+
+
+
 function calculateTotal(data){
 
-    let total=0;
+
+    let total = 0;
+
+
+
+    if(!data){
+
+        return 0;
+
+    }
+
 
 
     for(let key in data){
@@ -217,9 +320,13 @@ function calculateTotal(data){
     }
 
 
+
     return total;
 
+
 }
+
+
 
 
 
@@ -230,23 +337,39 @@ function calculateTotal(data){
 function createTable(data){
 
 
-    let html=`
+
+    if(!data){
+
+        return "";
+
+    }
+
+
+
+    let html = `
+
 
     <table>
 
-    <thead>
+        <thead>
 
-    <tr>
+            <tr>
 
-    <th>Column Name</th>
+                <th>
+                    Column Name
+                </th>
 
-    <th>Count</th>
+                <th>
+                    Count
+                </th>
 
-    </tr>
+            </tr>
 
-    </thead>
+        </thead>
 
-    <tbody>
+
+        <tbody>
+
 
     `;
 
@@ -255,23 +378,36 @@ function createTable(data){
     for(let column in data){
 
 
-        html+=`
+        html += `
+
 
         <tr>
 
-        <td>${column}</td>
 
-        <td>
+            <td>
+                ${column}
+            </td>
 
-        <span class="${data[column]==0?'good':'bad'}">
 
-        ${data[column]}
 
-        </span>
+            <td>
 
-        </td>
+                <span class="${
+                    data[column] == 0
+                    ? "good"
+                    : "bad"
+                }">
+
+                    ${data[column]}
+
+                </span>
+
+
+            </td>
+
 
         </tr>
+
 
         `;
 
@@ -280,16 +416,19 @@ function createTable(data){
 
 
 
-    html+=`
 
-    </tbody>
+    html += `
+
+        </tbody>
 
     </table>
 
     `;
 
 
+
     return html;
+
 
 }
 
@@ -299,55 +438,39 @@ function createTable(data){
 
 
 
-function renderAISummary(summary){
 
 
-    aiContainer.innerHTML="";
-
-
-    const overallIndex =
-    summary.indexOf("Overall Dataset Summary");
-
-
-    let tablePart = summary;
-
-    let overallPart = "";
+// ==============================
+// AI REPORT DISPLAY
+// ==============================
 
 
 
-    if(overallIndex !== -1){
-
-
-        tablePart =
-        summary.substring(0,overallIndex).trim();
+function renderAISummary(report){
 
 
 
-        overallPart =
-        summary.substring(overallIndex).trim();
-
-
-    }
+    aiContainer.innerHTML = "";
 
 
 
-    const regex =
-    /Table Name:\s*(.*?)\s*Overall Condition\s*([\s\S]*?)(?=Table Name:|$)/g;
+    if(!report || !report.tables){
 
 
+        aiContainer.innerHTML = `
 
-    let match;
+        <div class="ai-card">
+
+            <p>
+            Invalid AI report format
+            </p>
+
+        </div>
+
+        `;
 
 
-
-    while((match=regex.exec(tablePart))!==null){
-
-
-
-        createTableAICard(
-            match[1].trim(),
-            match[2].trim()
-        );
+        return;
 
 
     }
@@ -355,17 +478,31 @@ function renderAISummary(summary){
 
 
 
-    if(overallPart){
+
+    report.tables.forEach(table=>{
+
+
+        createTableAICard(table);
+
+
+    });
+
+
+
+
+
+    if(report.overall_dataset_summary){
 
 
         createOverallSummary(
-            overallPart
+            report.overall_dataset_summary
         );
 
 
     }
 
 
+
 }
 
 
@@ -374,38 +511,109 @@ function renderAISummary(summary){
 
 
 
-function createTableAICard(tableName,content){
 
 
-    const card=document.createElement("div");
-
-
-    card.className="ai-table-card";
+function createTableAICard(table){
 
 
 
-    card.innerHTML=`
+    const card =
+        document.createElement("div");
+
+
+
+    card.className =
+        "ai-table-card";
+
+
+
+    card.innerHTML = `
+
 
     <div class="ai-table-header">
 
+
         <i class="fa-solid fa-table"></i>
 
-        <h3>${tableName}</h3>
+
+        <h3>
+            ${table.table_name}
+        </h3>
+
 
     </div>
+
+
 
 
     <div class="ai-table-content">
 
-        ${formatText(content)}
+
+
+        <h4>
+            Overall Condition
+        </h4>
+
+
+        <p>
+            ${table.overall_condition}
+        </p>
+
+
+
+
+        <h4>
+            Suggestions
+        </h4>
+
+
+
+        <ul>
+
+
+        ${
+            (table.suggestions || [])
+            .map(item=>`
+
+                <li>
+                    ${item}
+                </li>
+
+            `)
+            .join("")
+        }
+
+
+        </ul>
+
+
+
+
+
+        <h4>
+            Final Status
+        </h4>
+
+
+
+        <p class="status">
+
+            ${table.final_status}
+
+        </p>
+
+
+
 
     </div>
+
 
     `;
 
 
 
     aiContainer.appendChild(card);
+
 
 
 }
@@ -416,40 +624,180 @@ function createTableAICard(tableName,content){
 
 
 
-function createOverallSummary(content){
 
 
-    content =
-    content.replace(
-        "Overall Dataset Summary",
-        ""
-    ).trim();
+function createOverallSummary(summary){
 
 
 
-    const card=document.createElement("div");
-
-
-    card.className="ai-overall-card";
+    const card =
+        document.createElement("div");
 
 
 
-    card.innerHTML=`
+    card.className =
+        "ai-overall-card";
+
+
+
+    card.innerHTML = `
+
 
     <div class="ai-overall-header">
 
+
         <i class="fa-solid fa-chart-line"></i>
 
-        <h2>Overall Dataset Summary</h2>
+
+        <h2>
+            Overall Dataset Summary
+        </h2>
+
 
     </div>
+
+
 
 
     <div class="ai-table-content">
 
-        ${formatText(content)}
+
+
+        <h4>
+            Quality Summary
+        </h4>
+
+        <p>
+            ${summary.quality_summary}
+        </p>
+
+
+
+
+        <h4>
+            Important Information
+        </h4>
+
+        <p>
+            ${summary.important_information}
+        </p>
+
+
+
+
+        <h4>
+            Duplicate Records
+        </h4>
+
+        <p>
+            ${summary.duplicate_record_summary}
+        </p>
+
+
+
+
+        <h4>
+            Strengths
+        </h4>
+
+        <p>
+            ${summary.strengths}
+        </p>
+
+
+
+
+        <h4>
+            Weaknesses
+        </h4>
+
+        <p>
+            ${summary.weaknesses}
+        </p>
+
+
+
+
+        <h4>
+            Recommended Improvements
+        </h4>
+
+
+        <ul>
+
+        ${
+            (summary.recommended_improvements || [])
+            .map(item=>`
+
+                <li>
+                    ${item}
+                </li>
+
+            `)
+            .join("")
+        }
+
+
+        </ul>
+
+
+
+        <h4>
+            Business Usage
+        </h4>
+
+
+
+        <p>
+            <b>Reports:</b>
+            ${summary.business_usage.reports}
+        </p>
+
+
+        <p>
+            <b>Dashboards:</b>
+            ${summary.business_usage.dashboards}
+        </p>
+
+
+        <p>
+            <b>Business Decisions:</b>
+            ${summary.business_usage.business_decisions}
+        </p>
+
+
+        <p>
+            <b>Further Analysis:</b>
+            ${summary.business_usage.further_analysis}
+        </p>
+
+
+        <p>
+            <b>Machine Learning:</b>
+            ${summary.business_usage.machine_learning}
+        </p>
+
+
+        <p>
+            <b>Prediction Models:</b>
+            ${summary.business_usage.prediction_models}
+        </p>
+
+
+
+        <h4>
+            Trust Level
+        </h4>
+
+
+        <p>
+            ${summary.trust_level}
+        </p>
+
+
 
     </div>
+
 
     `;
 
@@ -458,7 +806,10 @@ function createOverallSummary(content){
     aiContainer.appendChild(card);
 
 
+
 }
+
+
 
 
 
@@ -473,41 +824,13 @@ function cleanAIText(text){
 
     .replace(/<think>[\s\S]*?<\/think>/g,"")
 
+    .replace(/```json/g,"")
+
+    .replace(/```/g,"")
+
     .replace(/\r/g,"")
 
-    .replace(/[ \t]+/g," ")
-
-    .replace(/\n\s*\n\s*\n+/g,"\n\n")
-
     .trim();
-
-}
-
-
-
-
-
-
-
-function formatText(text){
-
-
-    return text
-
-    .replace(/\n\n+/g,"<br>")
-
-    .replace(/\n/g," ")
-
-    .replace(/Suggestions:/g,
-    "<strong>Suggestions:</strong>")
-
-    .replace(/Overall Condition:/g,
-    "<strong>Overall Condition:</strong>")
-
-    .replace(/Final Status:/g,
-    "<strong>Final Status:</strong>")
-
-    .replace(/•/g,"&#8226;");
 
 
 }
