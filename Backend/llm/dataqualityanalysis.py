@@ -16,6 +16,18 @@ Do not explain your reasoning process.
 
 Generate only the final JSON report.
 
+The JSON structure is mandatory.
+
+Do not return normal text.
+
+Do not return explanations.
+
+Do not return analysis.
+
+Do not return your thought process.
+
+Only return the completed JSON object.
+
 ==================================================
 INPUT
 ==================================================
@@ -520,7 +532,6 @@ Only recommend removing a column if:
 - The column provides very little business value.
 - The column is not used for reports, decisions, or analysis.
 - The column has no meaningful purpose.
-
 ==================================================
 BUSINESS IMPACT ANALYSIS
 ==================================================
@@ -552,6 +563,7 @@ Bad explanation:
 Avoid technical words.
 
 Do not use terms that non-technical users may not understand.
+
 ==================================================
 REASONING RULES
 ==================================================
@@ -587,7 +599,6 @@ Instead say:
 
 "A small number of duplicate records exist and should be monitored to prevent inaccurate reporting."
 
-
 ==================================================
 OUTPUT FORMAT (JSON ONLY)
 ==================================================
@@ -602,6 +613,9 @@ Do not wrap JSON inside code blocks.
 
 The response must be directly readable by JavaScript JSON.parse().
 
+The first character must be {
+
+The last character must be }
 
 Use exactly this structure:
 
@@ -671,27 +685,85 @@ TABLES OBJECT
 
 Create one object for every table.
 
-
-table_name:
+==================================================
+table_name
+==================================================
 
 Use the actual table name.
 
 Never include internal IDs.
 
+==================================================
+overall_condition
+==================================================
 
-overall_condition:
+Write exactly 8 to 13 simple sentences.
 
-Write 5 to 8 simple sentences.
+The first sentences must explain what the table is about and its business purpose using the table name and available columns.
+
+Follow this order:
+
+Sentence 1-3:
 
 Explain:
 
-- What the table is used for.
+- What the table represents.
+- What type of information the table stores.
+- How the information can be used in real-world situations.
+
+
+Example:
+
+"The Customer table contains information about customers and their basic details. This information helps businesses maintain customer records and support daily activities. Customer information can be useful for reports and customer-related analysis."
+
+
+Sentence 4-8:
+
+Explain the current condition.
+
+Mention:
+
 - Whether important information is available.
-- Whether critical information has issues.
+- Whether critical information has missing values.
+- Whether important information has missing values.
 - Whether optional empty information is acceptable.
 - Whether duplicate records are a concern.
 - Whether the table can be trusted.
-- Whether the table is suitable for normal reporting and analysis.
+
+
+Sentence 9-13:
+
+Explain business usability.
+
+Mention:
+
+- Whether reports can use the table.
+- Whether dashboards can use the table.
+- Whether business decisions can depend on the table.
+- Whether further analysis can be performed.
+- Whether machine learning or prediction models can use the information.
+
+
+Do not only describe numbers.
+
+Always explain the business meaning.
+
+Do not write:
+
+"There are 20 empty fields."
+
+Write:
+
+"Some important information is missing, which may affect the reliability of reports."
+
+
+Do not write:
+
+"There are duplicate rows."
+
+Write:
+
+"Duplicate records may affect the accuracy of totals and reports."
 
 
 Do not include:
@@ -702,8 +774,9 @@ Do not include:
 - Comparisons.
 - Technical database terms.
 
-
-suggestions:
+==================================================
+suggestions
+==================================================
 
 Write maximum 5 to 6 short recommendation sentences.
 
@@ -711,273 +784,25 @@ Each recommendation must be a separate string.
 
 Recommendations must be practical and easy to understand.
 
-
-final_status:
+==================================================
+final_status
+==================================================
 
 Choose only one exact value:
 
-
 "Ready for further analysis"
 
-
 or
-
 
 "Ready after small improvements"
 
-
 or
-
 
 "Needs improvement before reliable analysis"
 
-
 or
 
-
 "Not suitable for analysis yet"
-
-
-
-==================================================
-OVERALL DATASET SUMMARY RULES
-==================================================
-
-
-quality_summary:
-
-Explain the overall condition of the dataset using simple language.
-
-
-important_information:
-
-Explain whether important business information is mostly available.
-
-
-duplicate_record_summary:
-
-Explain whether duplicate records create risks.
-
-
-strengths:
-
-Explain the strongest parts of the dataset.
-
-
-weaknesses:
-
-Explain the main limitations of the dataset.
-
-
-recommended_improvements:
-
-Provide practical actions to improve reliability.
-
-
-business_usage:
-
-Explain suitability for each area:
-
-
-reports:
-
-Explain if the dataset can support business reports.
-
-
-dashboards:
-
-Explain if dashboards can be created reliably.
-
-
-business_decisions:
-
-Explain if users can depend on the data for decisions.
-
-
-further_analysis:
-
-Explain whether deeper analysis can be performed.
-
-
-machine_learning:
-
-Explain whether the data can support machine learning models.
-
-
-prediction_models:
-
-Explain whether prediction systems can use the data.
-
-
-
-trust_level:
-
-Give a simple business statement.
-
-Examples:
-
-"The dataset can be trusted for normal business use."
-
-"The dataset is useful but requires attention to some important information."
-
-"The dataset requires improvements before it can support reliable decisions."
-
-
-
-==================================================
-FINAL STATUS RULES
-==================================================
-
-
-For every table, choose only one status:
-
-
-Ready for further analysis:
-
-Use when:
-
-- Important information is available.
-- No major duplicate issues exist.
-- Only small or optional issues exist.
-
-
-Ready after small improvements:
-
-Use when:
-
-- The table is mostly useful.
-- Some small issues need attention.
-- Normal reporting is still possible.
-
-
-Needs improvement before reliable analysis:
-
-Use when:
-
-- Important information is missing.
-- Duplicate records may affect results.
-- Reports or decisions may become unreliable.
-
-
-Not suitable for analysis yet:
-
-Use when:
-
-- Major problems exist.
-- Important information is missing.
-- The data cannot be trusted for meaningful analysis.
-
-
-
-==================================================
-JSON VALIDATION RULES
-==================================================
-
-
-The final response must:
-
-- Contain only JSON.
-- Use double quotes for all keys and values.
-- Not contain comments.
-- Not contain trailing commas.
-- Not contain Markdown.
-- Not contain explanations outside JSON.
-- Be directly usable with JSON.parse() in JavaScript.
-
-
-==================================================
-WORDS AND PHRASES TO AVOID
-==================================================
-
-
-Do not mention:
-
-Internal ID.
-
-Tuple.
-
-Dictionary.
-
-Data structure.
-
-Reasoning process.
-
-Analysis process.
-
-Cleaning.
-
-Data Cleaning.
-
-Before Cleaning.
-
-After Cleaning.
-
-Previous dataset.
-
-Earlier dataset.
-
-Comparison.
-
-
-Do not use these words:
-
-Previously.
-
-Earlier.
-
-Before.
-
-After.
-
-Compared.
-
-Improved.
-
-Better.
-
-Worse.
-
-Declined.
-
-Increased.
-
-Decreased.
-
-
-Do not describe changes.
-
-Only describe the current condition.
-
-
-==================================================
-FINAL QUALITY RULES
-==================================================
-
-
-Always judge columns according to their business importance.
-
-Always give more importance to critical columns than optional columns.
-
-Never assume every empty field is a problem.
-
-Never assume repeated values inside a column are bad.
-
-Never allow optional empty information to make the whole table appear poor unless it affects the business purpose.
-
-Never compare the current dataset with any previous state.
-
-Never mention how the dataset was modified.
-
-
-Generate only the final JSON report.
-
-The report should help a non-technical user understand:
-
-- What is good about the data.
-- What needs attention.
-- What risks exist.
-- What actions should be taken.
-- Whether the data can be trusted for business use.
 """
 
 
