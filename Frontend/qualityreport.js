@@ -20,6 +20,10 @@ window.onload = function () {
 
 
 
+// ===============================
+// LOAD QUALITY REPORT
+// ===============================
+
 
 async function loadQualityReport() {
 
@@ -43,27 +47,27 @@ async function loadQualityReport() {
         const data = await response.json();
 
 
+        if(!response.ok){
 
-        if (!response.ok) {
+            errorMessage.innerText =
+                data.detail || "Failed to load report";
 
-            errorMessage.innerText = data.detail;
             return;
 
         }
 
 
 
-        renderFiles(data["files quality"]);
-
+        renderFiles(
+            data["files quality"]
+        );
 
 
     }
-    catch(error) {
-
+    catch(error){
 
         errorMessage.innerText =
             "Unable to connect with server";
-
 
     }
 
@@ -73,6 +77,10 @@ async function loadQualityReport() {
 
 
 
+
+// ===============================
+// GENERATE AI SUMMARY
+// ===============================
 
 
 generateBtn.addEventListener(
@@ -84,11 +92,7 @@ generateBtn.addEventListener(
 
 
 
-
-
-
-
-async function generateAISummary() {
+async function generateAISummary(){
 
 
     generateBtn.disabled = true;
@@ -99,11 +103,13 @@ async function generateAISummary() {
 
 
 
-    try {
+    try{
 
 
         const response = await fetch(
+
             `http://127.0.0.1:8000/table/aisummary?quality_id=${qualityId}`
+
         );
 
 
@@ -112,7 +118,10 @@ async function generateAISummary() {
 
 
 
-        console.log("API RESPONSE:", data);
+        console.log(
+            "BACKEND RESPONSE:",
+            data
+        );
 
 
 
@@ -126,21 +135,20 @@ async function generateAISummary() {
 
 
 
-        if(!data.AI_summary){
+        let report = data;
 
-            throw new Error(
-                "AI summary is empty"
-            );
+
+
+        // remove wrapper
+        if(report.AI_summary){
+
+            report = report.AI_summary;
 
         }
 
 
 
-        let report = data.AI_summary;
-
-
-
-        // if backend sends JSON string
+        // if AI_summary is string JSON
         if(typeof report === "string"){
 
 
@@ -154,16 +162,12 @@ async function generateAISummary() {
 
 
 
-
-        // handle nested response
-        if(report.AI_summary){
-
+        // handle nested AI_summary
+        while(report.AI_summary){
 
             report = report.AI_summary;
 
-
         }
-
 
 
 
@@ -209,7 +213,6 @@ async function generateAISummary() {
 
     }
 
-
 }
 
 
@@ -220,6 +223,11 @@ async function generateAISummary() {
 
 
 
+// ===============================
+// DISPLAY FILE QUALITY
+// ===============================
+
+
 function renderFiles(files){
 
 
@@ -227,7 +235,7 @@ function renderFiles(files){
 
 
 
-    if(!files || !Array.isArray(files)){
+    if(!Array.isArray(files)){
 
         return;
 
@@ -244,7 +252,7 @@ function renderFiles(files){
 
 
         clone.querySelector(".file-name").innerText =
-            file["movie name"];
+            file["movie name"] || "Unknown";
 
 
 
@@ -263,7 +271,7 @@ function renderFiles(files){
 
 
         clone.querySelector(".duplicate-total").innerText =
-            file["duplicated rows"];
+            file["duplicated rows"] || 0;
 
 
 
@@ -296,13 +304,10 @@ function renderFiles(files){
 
 
 
-
-
 function calculateTotal(data){
 
 
     let total = 0;
-
 
 
     if(!data){
@@ -313,11 +318,11 @@ function calculateTotal(data){
 
 
 
-    for(let key in data){
+    Object.values(data).forEach(value=>{
 
-        total += Number(data[key]);
+        total += Number(value);
 
-    }
+    });
 
 
 
@@ -333,9 +338,7 @@ function calculateTotal(data){
 
 
 
-
 function createTable(data){
-
 
 
     if(!data){
@@ -345,37 +348,37 @@ function createTable(data){
     }
 
 
-
     let html = `
-
 
     <table>
 
-        <thead>
+    <thead>
 
-            <tr>
+    <tr>
 
-                <th>
-                    Column Name
-                </th>
-
-                <th>
-                    Count
-                </th>
-
-            </tr>
-
-        </thead>
+    <th>
+    Column Name
+    </th>
 
 
-        <tbody>
+    <th>
+    Count
+    </th>
 
+
+    </tr>
+
+
+    </thead>
+
+
+    <tbody>
 
     `;
 
 
 
-    for(let column in data){
+    Object.keys(data).forEach(column=>{
 
 
         html += `
@@ -384,26 +387,27 @@ function createTable(data){
         <tr>
 
 
-            <td>
-                ${column}
-            </td>
+        <td>
+        ${column}
+        </td>
 
 
+        <td>
 
-            <td>
+        <span class="${
+            data[column]==0
+            ?
+            "good"
+            :
+            "bad"
+        }">
 
-                <span class="${
-                    data[column] == 0
-                    ? "good"
-                    : "bad"
-                }">
+        ${data[column]}
 
-                    ${data[column]}
-
-                </span>
+        </span>
 
 
-            </td>
+        </td>
 
 
         </tr>
@@ -412,14 +416,13 @@ function createTable(data){
         `;
 
 
-    }
-
+    });
 
 
 
     html += `
 
-        </tbody>
+    </tbody>
 
     </table>
 
@@ -428,7 +431,6 @@ function createTable(data){
 
 
     return html;
-
 
 }
 
@@ -440,30 +442,37 @@ function createTable(data){
 
 
 
-// ==============================
+// ===============================
 // AI REPORT DISPLAY
-// ==============================
-
+// ===============================
 
 
 function renderAISummary(report){
-
 
 
     aiContainer.innerHTML = "";
 
 
 
-    if(!report || !report.tables){
+    if(
+        !report ||
+        !Array.isArray(report.tables)
+    ){
+
+
+        console.log(
+            "INVALID REPORT:",
+            report
+        );
 
 
         aiContainer.innerHTML = `
 
         <div class="ai-card">
 
-            <p>
-            Invalid AI report format
-            </p>
+        <p>
+        Invalid AI report format
+        </p>
 
         </div>
 
@@ -478,7 +487,6 @@ function renderAISummary(report){
 
 
 
-
     report.tables.forEach(table=>{
 
 
@@ -486,7 +494,6 @@ function renderAISummary(report){
 
 
     });
-
 
 
 
@@ -533,12 +540,12 @@ function createTableAICard(table){
     <div class="ai-table-header">
 
 
-        <i class="fa-solid fa-table"></i>
+    <i class="fa-solid fa-table"></i>
 
 
-        <h3>
-            ${table.table_name}
-        </h3>
+    <h3>
+    ${table.table_name}
+    </h3>
 
 
     </div>
@@ -550,58 +557,57 @@ function createTableAICard(table){
 
 
 
-        <h4>
-            Overall Condition
-        </h4>
+    <h4>
+    Overall Condition
+    </h4>
 
 
-        <p>
-            ${table.overall_condition}
-        </p>
-
-
-
-
-        <h4>
-            Suggestions
-        </h4>
-
-
-
-        <ul>
-
-
-        ${
-            (table.suggestions || [])
-            .map(item=>`
-
-                <li>
-                    ${item}
-                </li>
-
-            `)
-            .join("")
-        }
-
-
-        </ul>
+    <p>
+    ${table.overall_condition}
+    </p>
 
 
 
 
 
-        <h4>
-            Final Status
-        </h4>
+    <h4>
+    Suggestions
+    </h4>
 
 
 
-        <p class="status">
+    <ul>
 
-            ${table.final_status}
 
-        </p>
+    ${
+        (table.suggestions || [])
+        .map(item=>`
 
+        <li>
+        ${item}
+        </li>
+
+        `)
+        .join("")
+    }
+
+
+    </ul>
+
+
+
+
+
+    <h4>
+    Final Status
+    </h4>
+
+
+    <p class="status">
+
+    ${table.final_status}
+
+    </p>
 
 
 
@@ -613,7 +619,6 @@ function createTableAICard(table){
 
 
     aiContainer.appendChild(card);
-
 
 
 }
@@ -629,7 +634,6 @@ function createTableAICard(table){
 function createOverallSummary(summary){
 
 
-
     const card =
         document.createElement("div");
 
@@ -643,172 +647,160 @@ function createOverallSummary(summary){
     card.innerHTML = `
 
 
-    <div class="ai-overall-header">
+<div class="ai-overall-header">
 
+<i class="fa-solid fa-chart-line"></i>
 
-        <i class="fa-solid fa-chart-line"></i>
+<h2>
+Overall Dataset Summary
+</h2>
 
+</div>
 
-        <h2>
-            Overall Dataset Summary
-        </h2>
 
 
-    </div>
+<div class="ai-table-content">
 
 
+<h4>
+Quality Summary
+</h4>
 
+<p>
+${summary.quality_summary}
+</p>
 
-    <div class="ai-table-content">
 
 
+<h4>
+Important Information
+</h4>
 
-        <h4>
-            Quality Summary
-        </h4>
+<p>
+${summary.important_information}
+</p>
 
-        <p>
-            ${summary.quality_summary}
-        </p>
 
 
+<h4>
+Duplicate Records
+</h4>
 
+<p>
+${summary.duplicate_record_summary}
+</p>
 
-        <h4>
-            Important Information
-        </h4>
 
-        <p>
-            ${summary.important_information}
-        </p>
 
+<h4>
+Strengths
+</h4>
 
+<p>
+${summary.strengths}
+</p>
 
 
-        <h4>
-            Duplicate Records
-        </h4>
 
-        <p>
-            ${summary.duplicate_record_summary}
-        </p>
+<h4>
+Weaknesses
+</h4>
 
+<p>
+${summary.weaknesses}
+</p>
 
 
 
-        <h4>
-            Strengths
-        </h4>
+<h4>
+Recommended Improvements
+</h4>
 
-        <p>
-            ${summary.strengths}
-        </p>
 
+<ul>
 
 
+${
+(summary.recommended_improvements || [])
+.map(item=>`
 
-        <h4>
-            Weaknesses
-        </h4>
+<li>
+${item}
+</li>
 
-        <p>
-            ${summary.weaknesses}
-        </p>
+`)
+.join("")
+}
 
 
+</ul>
 
 
-        <h4>
-            Recommended Improvements
-        </h4>
 
+<h4>
+Business Usage
+</h4>
 
-        <ul>
 
-        ${
-            (summary.recommended_improvements || [])
-            .map(item=>`
+<p>
+<b>Reports:</b>
+${summary.business_usage?.reports || ""}
+</p>
 
-                <li>
-                    ${item}
-                </li>
 
-            `)
-            .join("")
-        }
+<p>
+<b>Dashboards:</b>
+${summary.business_usage?.dashboards || ""}
+</p>
 
 
-        </ul>
+<p>
+<b>Business Decisions:</b>
+${summary.business_usage?.business_decisions || ""}
+</p>
 
 
+<p>
+<b>Further Analysis:</b>
+${summary.business_usage?.further_analysis || ""}
+</p>
 
-        <h4>
-            Business Usage
-        </h4>
 
+<p>
+<b>Machine Learning:</b>
+${summary.business_usage?.machine_learning || ""}
+</p>
 
 
-        <p>
-            <b>Reports:</b>
-            ${summary.business_usage.reports}
-        </p>
+<p>
+<b>Prediction Models:</b>
+${summary.business_usage?.prediction_models || ""}
+</p>
 
 
-        <p>
-            <b>Dashboards:</b>
-            ${summary.business_usage.dashboards}
-        </p>
 
+<h4>
+Trust Level
+</h4>
 
-        <p>
-            <b>Business Decisions:</b>
-            ${summary.business_usage.business_decisions}
-        </p>
 
+<p>
+${summary.trust_level}
+</p>
 
-        <p>
-            <b>Further Analysis:</b>
-            ${summary.business_usage.further_analysis}
-        </p>
 
 
-        <p>
-            <b>Machine Learning:</b>
-            ${summary.business_usage.machine_learning}
-        </p>
+</div>
 
 
-        <p>
-            <b>Prediction Models:</b>
-            ${summary.business_usage.prediction_models}
-        </p>
-
-
-
-        <h4>
-            Trust Level
-        </h4>
-
-
-        <p>
-            ${summary.trust_level}
-        </p>
-
-
-
-    </div>
-
-
-    `;
+`;
 
 
 
     aiContainer.appendChild(card);
 
 
-
 }
-
 
 
 
