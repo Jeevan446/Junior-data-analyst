@@ -829,3 +829,60 @@ table{
 
 
 }
+
+.ai-table-card{
+    background:#f8fafc;
+    border-left:6px solid #2563eb;
+    border-radius:22px;
+    padding:25px;
+    margin-bottom:22px;
+}
+
+.ai-table-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.ai-table-header i{
+    color:#2563eb;
+    font-size:22px;
+}
+
+.ai-table-header h3{
+    font-size:24px;
+    color:#111827;
+    font-weight:800;
+}
+
+.ai-table-content{
+    color:#475569;
+    line-height:1.9;
+}
+
+.ai-overall-card{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    border-radius:24px;
+    padding:30px;
+    margin-top:25px;
+}
+
+.ai-overall-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.ai-overall-header i{
+    color:#2563eb;
+    font-size:28px;
+}
+
+.ai-overall-header h2{
+    font-size:26px;
+    color:#111827;
+    font-weight:800;
+}

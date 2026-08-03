@@ -10,7 +10,6 @@ const aiContainer = document.getElementById("ai-summary-container");
 let qualityId = localStorage.getItem("quality_id");
 
 
-
 window.onload = function(){
 
     loadQualityReport();
@@ -19,10 +18,7 @@ window.onload = function(){
 
 
 
-
-
 async function loadQualityReport(){
-
 
     if(!qualityId){
 
@@ -33,7 +29,6 @@ async function loadQualityReport(){
 
 
     try{
-
 
         const response = await fetch(
             `http://127.0.0.1:8000/user/files/qualities/${qualityId}`
@@ -61,10 +56,7 @@ async function loadQualityReport(){
 
     }
 
-
 }
-
-
 
 
 
@@ -73,8 +65,6 @@ generateBtn.addEventListener(
     "click",
     generateAISummary
 );
-
-
 
 
 
@@ -101,11 +91,6 @@ async function generateAISummary(){
         const data = await response.json();
 
 
-
-        console.log(data);
-
-
-
         if(!response.ok){
 
             throw new Error(data.detail);
@@ -123,9 +108,8 @@ async function generateAISummary(){
 
 
         renderAISummary(
-            data.AI_summary
+            cleanAIText(data.AI_summary)
         );
-
 
 
     }
@@ -136,9 +120,9 @@ async function generateAISummary(){
 
         <div class="ai-card">
 
-        <p>
-        ${error.message}
-        </p>
+            <p>
+                ${error.message}
+            </p>
 
         </div>
 
@@ -158,10 +142,6 @@ async function generateAISummary(){
 
 
 }
-
-
-
-
 
 
 
@@ -214,7 +194,6 @@ function renderFiles(files){
         qualityContainer.appendChild(clone);
 
 
-
     });
 
 
@@ -226,10 +205,7 @@ function renderFiles(files){
 
 
 
-
-
 function calculateTotal(data){
-
 
     let total=0;
 
@@ -243,10 +219,7 @@ function calculateTotal(data){
 
     return total;
 
-
 }
-
-
 
 
 
@@ -265,18 +238,13 @@ function createTable(data){
 
     <tr>
 
-    <th>
-    Column Name
-    </th>
+    <th>Column Name</th>
 
-    <th>
-    Count
-    </th>
+    <th>Count</th>
 
     </tr>
 
     </thead>
-
 
     <tbody>
 
@@ -287,16 +255,11 @@ function createTable(data){
     for(let column in data){
 
 
-
         html+=`
 
         <tr>
 
-
-        <td>
-        ${column}
-        </td>
-
+        <td>${column}</td>
 
         <td>
 
@@ -307,7 +270,6 @@ function createTable(data){
         </span>
 
         </td>
-
 
         </tr>
 
@@ -329,10 +291,7 @@ function createTable(data){
 
     return html;
 
-
 }
-
-
 
 
 
@@ -343,120 +302,154 @@ function createTable(data){
 function renderAISummary(summary){
 
 
-
     aiContainer.innerHTML="";
 
 
+    const overallIndex =
+    summary.indexOf("Overall Dataset Summary");
 
-    summary = summary.replace(
-        /<think>[\s\S]*?<\/think>/g,
+
+    let tablePart = summary;
+
+    let overallPart = "";
+
+
+
+    if(overallIndex !== -1){
+
+
+        tablePart =
+        summary.substring(0,overallIndex).trim();
+
+
+
+        overallPart =
+        summary.substring(overallIndex).trim();
+
+
+    }
+
+
+
+    const regex =
+    /Table Name:\s*(.*?)\s*Overall Condition\s*([\s\S]*?)(?=Table Name:|$)/g;
+
+
+
+    let match;
+
+
+
+    while((match=regex.exec(tablePart))!==null){
+
+
+
+        createTableAICard(
+            match[1].trim(),
+            match[2].trim()
+        );
+
+
+    }
+
+
+
+
+    if(overallPart){
+
+
+        createOverallSummary(
+            overallPart
+        );
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+function createTableAICard(tableName,content){
+
+
+    const card=document.createElement("div");
+
+
+    card.className="ai-table-card";
+
+
+
+    card.innerHTML=`
+
+    <div class="ai-table-header">
+
+        <i class="fa-solid fa-table"></i>
+
+        <h3>${tableName}</h3>
+
+    </div>
+
+
+    <div class="ai-table-content">
+
+        ${formatText(content)}
+
+    </div>
+
+    `;
+
+
+
+    aiContainer.appendChild(card);
+
+
+}
+
+
+
+
+
+
+
+function createOverallSummary(content){
+
+
+    content =
+    content.replace(
+        "Overall Dataset Summary",
         ""
-    );
+    ).trim();
 
 
 
-    let parts = summary.split("**");
+    const card=document.createElement("div");
 
 
-
-    let overall="";
-
-
-
-    for(let i=1;i<parts.length;i+=2){
-
-
-
-        let title = parts[i].trim();
-
-
-        let content = parts[i+1]
-        ? parts[i+1].trim()
-        : "";
-
-
-
-        if(
-            title.toLowerCase()
-            .includes("overall dataset summary")
-        ){
-
-
-            overall=content;
-
-        }
-        else{
-
-
-            createAISummaryCard(
-                title,
-                content
-            );
-
-
-        }
-
-
-    }
-
-
-
-
-
-    if(overall){
-
-
-        createOverallCard(overall);
-
-
-    }
-
-
-
-}
-
-
-
-
-
-
-
-
-
-function createAISummaryCard(title,content){
-
-
-
-    let card=document.createElement("div");
-
-
-    card.className="ai-card";
+    card.className="ai-overall-card";
 
 
 
     card.innerHTML=`
 
-    <div class="ai-card-header">
+    <div class="ai-overall-header">
 
+        <i class="fa-solid fa-chart-line"></i>
 
-    <i class="fa-solid fa-table"></i>
-
-
-    <h3>
-    ${title}
-    </h3>
-
+        <h2>Overall Dataset Summary</h2>
 
     </div>
 
 
+    <div class="ai-table-content">
 
-    <p>
+        ${formatText(content)}
 
-    ${formatText(content)}
-
-    </p>
-
+    </div>
 
     `;
 
@@ -465,7 +458,6 @@ function createAISummaryCard(title,content){
     aiContainer.appendChild(card);
 
 
-
 }
 
 
@@ -474,51 +466,23 @@ function createAISummaryCard(title,content){
 
 
 
+function cleanAIText(text){
 
 
-function createOverallCard(content){
+    return text
 
+    .replace(/<think>[\s\S]*?<\/think>/g,"")
 
+    .replace(/\r/g,"")
 
-    let card=document.createElement("div");
+    .replace(/[ \t]+/g," ")
 
+    .replace(/\n\s*\n\s*\n+/g,"\n\n")
 
-    card.className="overall-card";
-
-
-
-    card.innerHTML=`
-
-    <div class="overall-title">
-
-
-    <i class="fa-solid fa-chart-line"></i>
-
-
-    <h2>
-    Overall Dataset Summary
-    </h2>
-
-
-    </div>
-
-
-    <p>
-
-    ${formatText(content)}
-
-    </p>
-
-
-    `;
-
-
-
-    aiContainer.appendChild(card);
-
-
+    .trim();
 
 }
+
 
 
 
@@ -529,8 +493,21 @@ function formatText(text){
 
 
     return text
-    .replace(/\n/g,"<br>")
-    .replace(/- /g,"• ");
+
+    .replace(/\n\n+/g,"<br>")
+
+    .replace(/\n/g," ")
+
+    .replace(/Suggestions:/g,
+    "<strong>Suggestions:</strong>")
+
+    .replace(/Overall Condition:/g,
+    "<strong>Overall Condition:</strong>")
+
+    .replace(/Final Status:/g,
+    "<strong>Final Status:</strong>")
+
+    .replace(/•/g,"&#8226;");
 
 
 }
