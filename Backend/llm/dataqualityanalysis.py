@@ -449,13 +449,21 @@ Do not exaggerate the problem.
 
 Use reasonable judgement.
 
+
+==================================================
+STRICT RULE
+==================================================
+strictly take the missing values,empty strings and duplicate rows from user prompt for each table and donot assume your own
+
 ==================================================
 CURRENT CONDITION RULE
 ==================================================
 
 The input may contain information from different states of the dataset.
 
-Use that information only to understand the current condition.
+Use that information  to understand the current condition.
+
+
 
 Never compare the current table with its previous state.
 
@@ -784,6 +792,10 @@ Each recommendation must be a separate string.
 
 Recommendations must be practical and easy to understand.
 
+suggest recomendations from your knowledge 
+
+also suggests which column can add for each table for better data analysis if needed and not contains in user prompt
+
 ==================================================
 final_status
 ==================================================
@@ -807,9 +819,11 @@ or
 
 
 def  quality_ai_summary(quality_id):
+  
     try:
         users_filequality_info=get_all_files_quality(quality_id)
         USER_PROMPT=users_filequality_info
+        print(str(USER_PROMPT))
         # print(users_filequality_info)
         response = requests.post(
         "http://localhost:11434/api/chat",
