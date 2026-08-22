@@ -1,3 +1,10 @@
+window.addEventListener('load', () => {
+  const loader = document.getElementById('page-loader');
+  if (loader) {
+    setTimeout(() => loader.classList.add('hidden'), 250);
+  }
+});
+
 const dropArea=document.getElementById("drop-area");
 
 const fileInput=document.getElementById("fileInput");

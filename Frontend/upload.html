@@ -2,147 +2,80 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>InsightFlow - Analysis</title>
-
-<link rel="stylesheet" href="upload.css">
-
-<link 
-rel="stylesheet" 
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightFlow - Analysis</title>
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="upload.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-
 <body>
-
-
-<header>
-
-<nav>
-
-<div class="logo">
-Insight<span>Flow</span>
-</div>
-
-</nav>
-
-</header>
-
-
-
-<section class="analysis-container">
-
-
-<div class="upload-section">
-
-
-<h1>
-Upload Your Files
-</h1>
-
-
-<p>
-Upload your CSV or Excel files and get meaningful insights from your data.
-</p>
-
-
-
-<div class="upload-box" id="drop-area">
-
-
-<i class="fa-solid fa-cloud-arrow-up"></i>
-
-
-<h2>
-Drag & Drop Files Here
-</h2>
-
-
-<p>
-or
-</p>
-
-
-
-<label class="upload-btn">
-
-Choose Files
-
-<input 
-type="file"
-id="fileInput"
-multiple
-accept=".csv,.xlsx,.xls">
-
-</label>
-
-
-<small>
-Supported files: CSV, XLSX, XLS
-</small>
-
-
-</div>
-
-
-
-<div id="file-list"></div>
-
-
-<p id="error-message"></p>
-
-
-
-<button 
-class="analyze-btn"
-id="analyze-btn">
-
-Upload Files
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-<div class="uploaded-section">
-
-
-<h2>
-Uploaded Files
-</h2>
-
-
-<div id="uploaded-files">
-    
-
-</div>
-<button
-class="analysis-btn"
-id="analysis-btn">
-
-Start Analysis
-
-</button>
-
-</div>
-
-
-</section>
-
-
-
-<script src="upload.js"></script>
-
-
+    <div class="page-loader" id="page-loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="container topbar">
+                <div class="brand">
+                    <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+                    Insight<span>Flow</span>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="window.location.href='user.html'">Back</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="page-stepper" class="page-stepper" aria-label="Workflow steps"></div>
+
+        <main class="container analysis-container">
+            <div class="upload-section">
+                <div class="section-heading">
+                    <p class="eyebrow">Upload</p>
+                    <h1>Bring in your data files</h1>
+                </div>
+                <p class="section-copy">Upload CSV or Excel files to review data quality, spot missing values, and generate actionable insights.</p>
+
+                <div class="upload-box" id="drop-area">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h2>Drag & Drop Files Here</h2>
+                    <p>or</p>
+                    <label class="upload-btn">
+                        Choose Files
+                        <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls">
+                    </label>
+                    <small>Supported files: CSV, XLSX, XLS</small>
+                </div>
+
+                <div id="file-list" class="file-list"></div>
+                <p id="error-message" class="inline-error"></p>
+                <button class="btn btn-primary analyze-btn" id="analyze-btn">Upload Files</button>
+            </div>
+
+            <aside class="uploaded-section">
+                <h2>Uploaded Files</h2>
+                <div id="uploaded-files" class="uploaded-files"></div>
+                <button class="btn btn-primary analysis-btn" id="analysis-btn">Start Analysis</button>
+            </aside>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div>© 2026 InsightFlow</div>
+                <!-- <div class="footer-links">
+                    <a href="Home.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="qualityreport.html">Report</a>
+                </div> -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="site.js"></script>
+    <script src="upload.js"></script>
 </body>
 
 </html>

@@ -2,199 +2,91 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>InsightFlow - Select Files</title>
-
-<link rel="stylesheet" href="selectfiles.css">
-
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightFlow - Select Files</title>
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="selectfiles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-
 <body>
-
-
-<header>
-
-<nav>
-
-<div class="logo">
-
-Insight<span>Flow</span>
-
-</div>
-
-</nav>
-
-</header>
-
-
-
-<section class="container">
-
-
-<div class="left-panel">
-
-
-<h2>Available Files</h2>
-
-
-<p id="p">
-
-Drag and Drop related files in the box to analyze the quality of files.
-
-</p>
-
-
-<div id="all-files"></div>
-
-
-</div>
-
-
-
-
-
-<div class="right-panel">
-
-
-<h2>Selected Files</h2>
-
-
-<p>
-
-Drop files here to start your analysis.
-
-</p>
-
-
-
-<div id="drop-area" class="drop-area">
-
-
-<div class="drop-message">
-
-<i class="fa-solid fa-cloud-arrow-down"></i>
-
-<p>Drag files here</p>
-
-</div>
-
-
-
-<div id="selected-files"></div>
-
-
-</div>
-
-
-
-<p id="error-message"></p>
-
-
-
-<button id="analyze-btn" class="analyze-btn">
-
-Check Quality
-
-</button>
-<div id="loader" class="loader-container">
-               <div class="premium-loader"></div>
-               </div>  
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<!-- SUCCESS POPUP -->
-
-
-<div id="success-modal" class="modal">
-
-
-<div class="modal-box">
-
-
-<div class="success-icon">
-
-<i class="fa-solid fa-check"></i>
-
-</div>
-
-
-
-<h2>
-
-Analysis Completed
-
-</h2>
-
-
-
-<p>
-
-Data quality analysis successfully completed.
-
-</p>
-
-
-
-<div class="modal-actions">
-
-
-<button 
-id="check-quality-btn"
-class="primary-btn">
-
-<i class="fa-solid fa-chart-line"></i>
-
-Check Data Quality
-
-</button>
-
-
-
-
-<button 
-id="skip-quality-btn"
-class="secondary-btn">
-
-<i class="fa-solid fa-forward"></i>
-
-Skip Data  Analysis
-
-</button>
-
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-<script src="selectfiles.js"></script>
-
-
+    <div class="page-loader" id="page-loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="container topbar">
+                <div class="brand">
+                    <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+                    Insight<span>Flow</span>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='upload.html'">Upload</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="page-stepper" class="page-stepper" aria-label="Workflow steps"></div>
+
+        <main class="container">
+            <section class="selectfiles-grid">
+
+                <div class="left-panel">
+                    <h2>Available Files</h2>
+                    <p>Drag and Drop related files in the box to analyze the quality of files.</p>
+                    <div id="all-files"></div>
+                </div>
+
+                <div class="right-panel">
+                    <h2>Selected Files</h2>
+                    <p>Drop files here to start your analysis.</p>
+
+                    <div id="drop-area" class="drop-area">
+                        <div class="drop-message">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <p>Drag files here</p>
+                        </div>
+                        <div id="selected-files"></div>
+                    </div>
+
+                    <p id="error-message"></p>
+                    <button id="analyze-btn" class="analyze-btn">Check Quality</button>
+                    <div id="loader" class="loader-container"><div class="premium-loader"></div></div>
+                </div>
+
+            </section>
+
+            <div id="success-modal" class="modal">
+                <div class="modal-box">
+                    <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+                    <h2>Analysis Completed</h2>
+                    <p>Data quality analysis successfully completed.</p>
+                    <div class="modal-actions">
+                        <button id="check-quality-btn" class="primary-btn"><i class="fa-solid fa-chart-line"></i>Check Data Quality</button>
+                        <button id="skip-quality-btn" class="secondary-btn"><i class="fa-solid fa-forward"></i>Skip Data Analysis</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div>© 2026 InsightFlow</div>
+                <!-- <div class="footer-links">
+                    <a href="Home.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="qualityreport.html">Report</a>
+                </div> -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="site.js"></script>
+    <script src="selectfiles.js"></script>
 </body>
 
 </html>

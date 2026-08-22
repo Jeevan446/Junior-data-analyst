@@ -2,405 +2,101 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Data Quality Report</title>
-
-<link rel="stylesheet" href="qualityreport.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Quality Report</title>
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="qualityreport.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
-
 <body>
-
-
-<header class="top-bar">
-
-
-<div class="logo">
-
-<i class="fa-solid fa-chart-column"></i>
-
-<span>Junior Data Analyst AI</span>
-
-</div>
-
-
-
-<div class="page-title">
-
-<h1>Data Quality Report</h1>
-
-<p>
-Analyze missing values, empty strings and duplicate rows
-</p>
-
-</div>
-
-
-</header>
-
-
-
-
-
-<main class="dashboard">
-
-
-<div id="error-message"></div>
-
-
-
-
-<section class="ai-section">
-
-
-
-<div class="ai-header">
-
-
-<div class="ai-icon">
-
-<i class="fa-solid fa-robot"></i>
-
-</div>
-
-
-
-<div>
-
-<h2>
-AI Data Quality Analysis
-</h2>
-
-
-<p>
-Generate intelligent insights using DeepSeek AI
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<button id="generate-ai-btn">
-
-
-<i class="fa-solid fa-wand-magic-sparkles"></i>
-
-Generate AI Summary
-
-
-</button>
-
-
-
-
-
-
-<div id="ai-loading">
-
-
-<div class="loader"></div>
-
-
-<p>
-Analyzing dataset with AI...
-</p>
-
-
-</div>
-
-
-
-
-
-
-<div id="ai-summary-container"></div>
-
-
-
-</section>
-
-
-
-
-
-
-
-<section class="quality-section">
-
-
-<h2 class="quality-heading">
-
-<i class="fa-solid fa-database"></i>
-
-File Quality Details
-
-</h2>
-
-
-
-
-
-<div id="quality-container"></div>
-
-
-
-</section>
-
-
-
-
-</main>
-
-
-
-
-
-
-
-
-
-<template id="file-template">
-
-
-<div class="quality-card">
-
-
-
-<div class="card-header">
-
-
-
-<div class="file-info">
-
-
-
-<div class="file-icon">
-
-<i class="fa-solid fa-file-lines"></i>
-
-</div>
-
-
-
-
-<div>
-
-
-<h2 class="file-name"></h2>
-
-
-<span class="file-subtitle">
-
-Dataset Quality Report
-
-</span>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-
-<div class="status-badge">
-
-
-<i class="fa-solid fa-circle-check"></i>
-
-
-Checked
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="summary">
-
-
-
-<div class="summary-card red">
-
-
-<i class="fa-solid fa-triangle-exclamation"></i>
-
-
-<h3 class="missing-total">
-0
-</h3>
-
-
-<span>
-Missing Values
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="summary-card yellow">
-
-
-<i class="fa-solid fa-font"></i>
-
-
-<h3 class="empty-total">
-0
-</h3>
-
-
-<span>
-Empty Strings
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="summary-card blue">
-
-
-<i class="fa-solid fa-copy"></i>
-
-
-<h3 class="duplicate-total">
-0
-</h3>
-
-
-<span>
-Duplicate Rows
-</span>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="section">
-
-
-<div class="section-title">
-
-
-<i class="fa-solid fa-circle-exclamation"></i>
-
-
-Missing Values
-
-
-</div>
-
-
-
-<div class="table-area missing-table"></div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="section">
-
-
-<div class="section-title">
-
-
-<i class="fa-solid fa-align-left"></i>
-
-
-Empty Strings
-
-
-</div>
-
-
-
-<div class="table-area empty-table"></div>
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-</template>
-
-
-
-
-
-
-
-
-<script src="qualityreport.js"></script>
-
+    <div class="page-loader" id="page-loader">
+        <div class="loader-ring"></div>
+    </div>
+
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="container topbar">
+                <div class="brand">
+                    <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+                    Insight<span>Flow</span>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='selectfiles.html'">Files</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="page-stepper" class="page-stepper" aria-label="Workflow steps"></div>
+
+        <main class="container dashboard">
+
+            <div id="error-message"></div>
+
+            <section class="ai-section">
+
+                <div class="ai-header">
+                    <div class="ai-icon"><i class="fa-solid fa-robot"></i></div>
+                    <div>
+                        <h2>AI Data Quality Analysis</h2>
+                        <p>Generate intelligent insights using DeepSeek AI</p>
+                    </div>
+                </div>
+
+                <button id="generate-ai-btn"><i class="fa-solid fa-wand-magic-sparkles"></i>Generate AI Summary</button>
+
+                <div id="ai-loading"><div class="loader"></div><p>Analyzing dataset with AI...</p></div>
+                <div id="ai-summary-container"></div>
+
+            </section>
+
+            <section class="quality-section">
+                <h2 class="quality-heading"><i class="fa-solid fa-database"></i>File Quality Details</h2>
+                <div id="quality-container"></div>
+            </section>
+
+        </main>
+
+        <template id="file-template">
+            <div class="quality-card">
+                <div class="card-header">
+                    <div class="file-info">
+                        <div class="file-icon"><i class="fa-solid fa-file-lines"></i></div>
+                        <div>
+                            <h2 class="file-name"></h2>
+                            <span class="file-subtitle">Dataset Quality Report</span>
+                        </div>
+                    </div>
+                    <div class="status-badge"><i class="fa-solid fa-circle-check"></i>Checked</div>
+                </div>
+
+                <div class="summary">
+                    <div class="summary-card red"><i class="fa-solid fa-triangle-exclamation"></i><h3 class="missing-total">0</h3><span>Missing Values</span></div>
+                    <div class="summary-card yellow"><i class="fa-solid fa-font"></i><h3 class="empty-total">0</h3><span>Empty Strings</span></div>
+                    <div class="summary-card blue"><i class="fa-solid fa-copy"></i><h3 class="duplicate-total">0</h3><span>Duplicate Rows</span></div>
+                </div>
+
+                <div class="section"><div class="section-title"><i class="fa-solid fa-circle-exclamation"></i>Missing Values</div><div class="table-area missing-table"></div></div>
+                <div class="section"><div class="section-title"><i class="fa-solid fa-align-left"></i>Empty Strings</div><div class="table-area empty-table"></div></div>
+            </div>
+        </template>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div>© 2026 InsightFlow</div>
+                <!-- <div class="footer-links">
+                    <a href="Home.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="selectfiles.html">Files</a>
+                </div> -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="site.js"></script>
+    <script src="qualityreport.js"></script>
 
 </body>
 

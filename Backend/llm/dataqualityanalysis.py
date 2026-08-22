@@ -846,8 +846,7 @@ def  quality_ai_summary(quality_id):
         data = response.json()
 
         ai_content = data["message"]["content"]
-        ai_json = json.loads(ai_content)
-
+        ai_json = json.loads(ai_content)````
         return {
             "AI_summary": ai_json
         }

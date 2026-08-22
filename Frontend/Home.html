@@ -4,130 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>InsightFlow - Data Analytics</title>
-
-    <link rel="stylesheet" href="home.css">
-
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    >
-
+    <link rel="stylesheet" href="site.css">
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-
-<header>
-
-    <nav>
-
-        <div class="logo">
-            Insight<span>Flow</span>
-        </div>
-
-        <!-- <button class="nav-btn">
-            Start Now
-        </button> -->
-
-    </nav>
-
-</header>
-
-
-<section class="hero">
-
-
-    <div class="hero-content">
-
-        <h1>
-            Turn Your Business Data Into
-            <span>Better Decisions</span>
-        </h1>
-
-
-        <p class="quote">
-            "Great decisions start with understanding your data."
-        </p>
-
-
-        <p class="description">
-            InsightFlow helps businesses analyze CSV and Excel files,
-            discover patterns, visualize trends, and generate meaningful
-            insights using intelligent data analysis.
-        </p>
-
-
-       <button class="main-btn" onclick="window.location.href='user.html'">
-    Start Analyzing
-    <i class="fa-solid fa-arrow-right"></i>
-</button>
-
+    <div class="page-loader" id="page-loader">
+        <div class="loader-ring"></div>
     </div>
 
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="container topbar">
+                <div class="brand" aria-label="InsightFlow home">
+                    <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+                    Insight<span>Flow</span>
+                </div>
 
-
-    <div class="feature-box">
-
-
-        <div class="feature">
-
-            <i class="fa-solid fa-chart-column"></i>
-
-            <div>
-                <h3>Data Analysis</h3>
-                <p>Understand your business data easily.</p>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='user.html'">Start Now</button>
+                </div>
             </div>
+        </header>
 
-        </div>
+        <main>
+            <section class="hero container">
+                <div class="hero-content">
+                    <p class="eyebrow">Business intelligence made simple</p>
+                    <h1>Turn your data into <span>smarter decisions</span></h1>
+                    <p class="quote">“Great decisions start with understanding your data.”</p>
+                    <p class="description">InsightFlow helps teams review CSV and Excel files, find patterns, track quality issues, and turn raw data into clear business insights.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="window.location.href='user.html'">
+                            Start Analyzing <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <a class="btn btn-ghost" href="qualityreport.html">View Sample Report</a>
+                    </div>
+                </div>
 
+                <div class="feature-box" aria-label="Key features">
+                    <div class="feature">
+                        <i class="fa-solid fa-chart-column"></i>
+                        <div>
+                            <h3>Data Analysis</h3>
+                            <p>Understand business trends quickly.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <div>
+                            <h3>File Support</h3>
+                            <p>Analyze CSV and Excel files with ease.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <div>
+                            <h3>Visual Reports</h3>
+                            <p>See patterns clearly with quality insights.</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-robot"></i>
+                        <div>
+                            <h3>AI Assistant</h3>
+                            <p>Ask questions and better understand data.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <div class="feature">
-
-            <i class="fa-solid fa-file-csv"></i>
-
-            <div>
-                <h3>File Support</h3>
-                <p>Analyze CSV and Excel files.</p>
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div>© 2026 InsightFlow</div>
+                <!-- <div class="footer-links">
+                    <a href="Home.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="qualityreport.html">Report</a>
+                </div> -->
             </div>
-
-        </div>
-
-
-
-        <div class="feature">
-
-            <i class="fa-solid fa-chart-line"></i>
-
-            <div>
-                <h3>Visual Reports</h3>
-                <p>Find trends through charts.</p>
-            </div>
-
-        </div>
-
-
-
-        <div class="feature">
-
-            <i class="fa-solid fa-robot"></i>
-
-            <div>
-                <h3>AI Assistant</h3>
-                <p>Ask questions about your data.</p>
-            </div>
-
-        </div>
-
-
+        </footer>
     </div>
 
-
-</section>
-
-
-<script src="script.js"></script>
-
+    <script src="site.js"></script>
+    <script src="Home.js"></script>
 </body>
 
 </html>

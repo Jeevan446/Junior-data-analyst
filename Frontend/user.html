@@ -2,122 +2,76 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>InsightFlow - User Information</title>
-
+    <link rel="stylesheet" href="site.css">
     <link rel="stylesheet" href="user.css">
-
 </head>
 
-
 <body>
-
-
-<header>
-
-    <nav>
-
-        <div class="logo">
-            Insight<span>Flow</span>
-        </div>
-
-    </nav>
-
-</header>
-
-
-
-<section class="user-container">
-
-
-    <div class="form-box">
-
-
-        <h1>
-            Tell Us About Yourself
-        </h1>
-
-
-        <p class="info">
-            This information is optional, but providing correct details
-            helps InsightFlow understand your business better and improves
-            analysis accuracy.
-        </p>
-
-
-
-        <label>
-            Your Name
-        </label>
-
-        <input 
-        type="text"
-        id="name"
-        placeholder="Enter your name (optional)">
-
-
-
-        <label>
-            Company Type
-        </label>
-
-        <input 
-        type="text"
-        id="company"
-        placeholder="Example: E-commerce, Education, Agriculture">
-
-
-
-        <label>
-            About Your Company
-        </label>
-
-        <textarea
-        id="description"
-        placeholder="Describe your company (maximum 100 words)">
-        </textarea>
-
-
-        <p id="word-count">
-            Words: 0 / 100
-        </p>
-
-
-        <p id="error-message"></p>
-
-
-
-        <div class="buttons">
-
-
-            <button class="skip" onclick="skipInfo()">
-                Skip
-            </button>
-
-
-            <button class="start" onclick="startAnalysis()">
-                Start Analysis
-            </button>
-            <div id="loader" class="loader-container">
-               <div class="premium-loader"></div>
-               </div>  
- 
-        </div>
-
-
+    <div class="page-loader" id="page-loader">
+        <div class="loader-ring"></div>
     </div>
 
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="container topbar">
+                <div class="brand">
+                    <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+                    Insight<span>Flow</span>
+                </div>
 
-</section>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="window.location.href='Home.html'">Home</button>
+                </div>
+            </div>
+        </header>
 
+        <div id="page-stepper" class="page-stepper" aria-label="Workflow steps"></div>
 
+        <main class="user-container container">
+            <div class="form-box">
+                <p class="eyebrow">Profile</p>
+                <h1>Tell us about your business</h1>
+                <p class="info">This information is optional, but it helps InsightFlow understand your business better and improve report quality.</p>
 
-<script src="user.js"></script>
+                <label>Your Name</label>
+                <input type="text" id="name" placeholder="Enter your name (optional)">
 
+                <label>Company Type</label>
+                <input type="text" id="company" placeholder="Example: E-commerce, Education, Agriculture">
 
+                <label>About Your Company</label>
+                <textarea id="description" placeholder="Describe your company (maximum 100 words)"></textarea>
+
+                <p id="word-count">Words: 0 / 100</p>
+                <p id="error-message" class="inline-error"></p>
+
+                <div class="buttons">
+                    <button class="btn btn-ghost skip" onclick="skipInfo()">Skip</button>
+                    <button class="btn btn-primary start" onclick="startAnalysis()">Start Analysis</button>
+                    <div id="loader" class="loader-container">
+                        <div class="premium-loader"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-inner">
+                <div>© 2026 InsightFlow</div>
+                <!-- <div class="footer-links">
+                    <a href="Home.html">Home</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="qualityreport.html">Report</a>
+                </div> -->
+            </div>
+        </footer>
+    </div>
+
+    <script src="site.js"></script>
+    <script src="user.js"></script>
 </body>
 
 </html>

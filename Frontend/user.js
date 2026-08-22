@@ -1,3 +1,10 @@
+window.addEventListener('load', () => {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+        setTimeout(() => loader.classList.add('hidden'), 250);
+    }
+});
+
 const description = document.getElementById("description");
 const wordCount = document.getElementById("word-count");
 const errorMessage = document.getElementById("error-message");
