@@ -1,7 +1,7 @@
 import pandas as pd
-from .data_metadata2 import metadata_extraction
 from pathlib import Path
-
+from .file_quality import call_quality
+from fastapi import HTTPException
 def file_to_df(file_name_arr,user_id):
     try:
         # print(file_name_arr)
@@ -30,8 +30,11 @@ def file_to_df(file_name_arr,user_id):
             }
             dfs.append(df_obj)
 
-        # print(dfs)
-        return metadata_extraction(dfs)
+        call_quality(dfs)
+   
+    except HTTPException:
+        raise    
 
     except Exception as e:
         print("Error while converting files to dataframes",e)
+        raise HTTPException(status_code=300,detail='dfdsfd')

@@ -2,11 +2,10 @@ from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel,Field
 import random
 import string
-from database.queries import search_user,add_users,file_qualityid_exists,add_file_quality_info,create_quality_table, get_all_files_quality
-from core.files_to_dataframes1 import file_to_df
+from database.queries import search_user,add_users
+from core.file_quality.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
-from llm.dataqualityanalysis import quality_ai_summary
 
 
 router=APIRouter()
@@ -58,15 +57,14 @@ def create_new_user(user:User):
         raise HTTPException(status_code=500,detail="Internal Server Error While creating user")
 
 
+
 class User(BaseModel):
     user_id: str
     filenames: List[str]
-   
-        
+           
 @router.post('/user/file/qualitycheck')
 def analyze(user: User):
     try:
-        create_quality_table()
         is_user = search_user(user.user_id)
 
         if not is_user:
@@ -76,7 +74,7 @@ def analyze(user: User):
             )
 
         arr = []
-
+      
         for filename in user.filenames:
 
             cleaned_file_name = clean_filename(filename)
@@ -88,23 +86,11 @@ def analyze(user: User):
             arr.append(combined_filename)
         
         quality_arr=file_to_df(arr, user.user_id)
-
-
-        while True:
-            quality_id=randomstring()
-            is_quality_id_exists=file_qualityid_exists(quality_id)
-            if not is_quality_id_exists:
-                break
-        
-        add_file_quality_info(user.user_id,quality_id,quality_arr)
-
-
        
         # print (d)
         return {
             "success": True,
             "message": "User files found successfully",
-            "quality_id":quality_id
         }
 
     except HTTPException:
@@ -116,55 +102,3 @@ def analyze(user: User):
             detail="Internal server error while analyzing"
         )
    
-
-@router.get('/user/files/qualities/{quality_id}')
-def files_quality(quality_id):
-    try:
-       
-        files_quality= get_all_files_quality(quality_id)
-        # print(files_quality)
-        
-        # converting tuples send by db to python dictonary
-        quality_arr=[]
-        # testing()
-        for file_quality in files_quality:
-        
-            # print(file_quality[0])
-            quality_dict={
-                'user_id':file_quality[0],
-                'quality_id':file_quality[1],
-                'movie name':file_quality[2],
-                'missing values':file_quality[3],
-                'empty strings':file_quality[4],
-                'duplicated rows':file_quality[5]
-            }
-            quality_arr.append(quality_dict)
-           
-
-        return{
-            "sucess" :True,
-             "files quality":quality_arr,
-
-        }
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500,detail="Internal server error while getting files quality")
-
-@router.get('/table/aisummary')
-def ai_summary(quality_id:str):
-    try:
-        ai_summery=quality_ai_summary(quality_id)
-        print(ai_summery)
-        return {
-            "sucess":True,
-            "AI_summary":ai_summery
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500,detail="Error while getting ai summary")
-
-
-
-# @router.get('/users')
-# def users():
-#  return {'message':"Hello from users"}
-
