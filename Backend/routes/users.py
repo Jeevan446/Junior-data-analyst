@@ -6,7 +6,8 @@ from database.queries import search_user,add_users
 from core.file_quality.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
-
+from core.file_quality.file_quality import Completeness
+from llm.dataqualityanalysis import completeness_llm
 
 router=APIRouter()
 
@@ -84,13 +85,12 @@ def analyze(user: User):
             )
 
             arr.append(combined_filename)
-        
-        quality_arr=file_to_df(arr, user.user_id)
        
         # print (d)
         return {
             "success": True,
             "message": "User files found successfully",
+            "file_arr":arr
         }
 
     except HTTPException:
@@ -102,3 +102,19 @@ def analyze(user: User):
             detail="Internal server error while analyzing"
         )
    
+
+class data_completeness(BaseModel):
+    user_id:str
+
+@router.post('/user/file/qualitycheck/{filename}')
+def check_data_completeness(filename,user:data_completeness):
+    try:
+        dataframe=file_to_df(filename,user.user_id)
+        c=Completeness(dataframe[0])
+        llm_feed=(c.sending_values())
+        llm_response=completeness_llm(llm_feed)
+
+        return {'sucess':True,'llm_response':{"message":llm_response}}
+
+    except Exception as e:
+        print("Error during checking completenss of data",e)

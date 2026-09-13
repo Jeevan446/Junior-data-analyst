@@ -20,26 +20,36 @@ class Completeness:
                 missing_dict["no_of_missing"]=value
                 missing_dict['missing_percentage']=(value/(shape[0]))*100
                 self.missing_arr.append(missing_dict)
-
-            # print(self.missing_arr)
-
         except Exception as e:
             print("Error which checking missing values completeness",e)
             raise HTTPException(status_code=500,
             detail="Error while checking completeness of data")
 
-class Uniqueness(Completeness):
-    def __init__(self,df_dict):
-        super().__init__(df_dict)
-        self.df_dict=df_dict
-        self.duplicated_rows()
-    def duplicated_rows(self):
-        try:
-            duplicated_rows=self.df_dict['dataframe'].duplicated().sum()
-            duplicated_row_percentage=(duplicated_rows/self.df_dict['dataframe'].shape[0])*100  
-        except Exception as e:
-            print("Error while checking duplicated rows",e)
-            raise HTTPException(status_code=500,detail="Error while checking Uniqueness of data")
+    def sending_values(self):
+        m=self.missing_arr
+        return m
+
+        
+
+# class Uniqueness(Completeness):
+#     def __init__(self,df_dict):
+#         super().__init__(df_dict)
+#         self.df_dict=df_dict
+#         self.duplicated_rows()
+#     def duplicated_rows(self):
+#         try:
+#             duplicated_rows=self.df_dict['dataframe'].duplicated().sum()
+#             duplicated_row_percentage=(duplicated_rows/self.df_dict['dataframe'].shape[0])*100  
+#         except Exception as e:
+#             print("Error while checking duplicated rows",e)
+#             raise HTTPException(status_code=500,detail="Error while checking Uniqueness of data")
+#     def unique_columns(self):
+#         try:
+#             print("Hello world")
+#         except Exception as e:
+#             print("Error while checking duplicated rows",e)
+#             raise HTTPException(status_code=500,detail="Error while checking Uniqueness of data")
+  
 
 
 

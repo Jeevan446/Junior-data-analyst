@@ -2,35 +2,35 @@ import pandas as pd
 from pathlib import Path
 from .file_quality import call_quality
 from fastapi import HTTPException
-def file_to_df(file_name_arr,user_id):
+def file_to_df(file_name,user_id):
     try:
         # print(file_name_arr)
         dfs=[]
 
-        for file_path in file_name_arr:
-            path=Path(file_path)
-            folder_file_path=Path("temp_files")/file_path
-            df_name=path.stem.split("&")[1]
 
-            if path.suffix==".csv":
-                df=pd.read_csv(folder_file_path)
+        path=Path(file_name)
+        folder_file_path=Path("temp_files")/file_name
+        df_name=path.stem.split("&")[1]
 
-            elif path.suffix == ".xlsx":
-                df = pd.read_excel(folder_file_path, engine="openpyxl")
+        if path.suffix==".csv":
+            df=pd.read_csv(folder_file_path)
 
-            elif path.suffix == ".xls":
-                df = pd.read_excel(folder_file_path, engine="xlrd")
+        elif path.suffix == ".xlsx":
+            df = pd.read_excel(folder_file_path, engine="openpyxl")
 
-            else:
-                continue
+        elif path.suffix == ".xls":
+            df = pd.read_excel(folder_file_path, engine="xlrd")
 
-            df_obj={
+        else:
+            raise HTTPException(status_code=400,detail="Invalid file format")
+ 
+        df_obj={
                 "name":df_name,
                 "dataframe":df
             }
-            dfs.append(df_obj)
+        dfs.append(df_obj)
 
-        call_quality(dfs)
+        return dfs
    
     except HTTPException:
         raise    
