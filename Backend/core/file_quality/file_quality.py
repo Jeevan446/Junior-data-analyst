@@ -20,6 +20,7 @@ class Completeness:
                 missing_dict["no_of_missing"]=value
                 missing_dict['missing_percentage']=(value/(shape[0]))*100
                 self.missing_arr.append(missing_dict)
+            self.missing_arr.append({"Random_values":df_dict['random_data']})
         except Exception as e:
             print("Error which checking missing values completeness",e)
             raise HTTPException(status_code=500,

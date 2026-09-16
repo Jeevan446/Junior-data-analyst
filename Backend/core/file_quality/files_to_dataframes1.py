@@ -24,9 +24,21 @@ def file_to_df(file_name,user_id):
         else:
             raise HTTPException(status_code=400,detail="Invalid file format")
  
+        # print(df.columns)
+        random_arr=[]
+        random=df.sample(3).to_dict(orient="index")
+        for key,value in random.items():
+            random_dict={
+                "random_row":value
+            }
+            random_arr.append(random_dict)
+        
+
         df_obj={
                 "name":df_name,
-                "dataframe":df
+                "dataframe":df,
+                "random_data":random_arr
+                
             }
         dfs.append(df_obj)
 

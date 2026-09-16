@@ -111,6 +111,7 @@ def check_data_completeness(filename,user:data_completeness):
     try:
         dataframe=file_to_df(filename,user.user_id)
         c=Completeness(dataframe[0])
+        print(c.sending_values())
         llm_feed=(c.sending_values())
         llm_response=completeness_llm(llm_feed)
 
