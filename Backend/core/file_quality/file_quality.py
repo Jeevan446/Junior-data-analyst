@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from llm.Uniqueness import fetch_unique_columns
 def call_quality(dfs):
     for df_dict in dfs:
         c=Uniqueness(df_dict)
@@ -11,6 +12,7 @@ class Completeness:
     def missing_values(self):
         try:
             df_dict=self.df_dict
+            print(df_dict)
             missing_series=(df_dict["dataframe"].isna().sum())
             shape=(df_dict["dataframe"].shape)
             self.missing_arr.append({"Tablename":df_dict['name']})
@@ -33,9 +35,10 @@ class Completeness:
         
 
 class Uniqueness():
-    def __init__(self,df_dict):
+    def __init__(self,df_dict,table_type):
         self.df_dict=df_dict
         self.sending_arr=[]
+        self.table_type=table_type
         self.duplicated_rows()
     def duplicated_rows(self):
         try:
@@ -46,6 +49,19 @@ class Uniqueness():
             duplicate_dict['duplicated_rows_percenage']=float(duplicated_percentage)
             self.sending_arr.append(duplicate_dict)
             print(self.sending_arr)
+            self.column_value_uniqueness()
         except Exception as e:
             print("Error while checking duplicated rows uniqueness",e)
-            raise HTTPException(status_code=500,detail="Error while check uniqueness of data")
+            raise HTTPException(status_code=500,detail="Error while checking uniqueness of data")
+    def column_value_uniqueness(self):
+        try:
+            sending_dict={}
+            sending_dict["filename"]=self.df_dict['name']
+            sending_dict["table_type"]=self.table_type
+            sending_dict["column_names"]=self.df_dict['dataframe'].columns.to_list()
+            print(sending_dict)
+            fetch_unique_columns(sending_dict)
+            
+        except Exception as e:
+            print("Error while checking column values uniqueness",e)
+            raise HTTPException(status_code=500,detail="Error while checking uniqueness of data")

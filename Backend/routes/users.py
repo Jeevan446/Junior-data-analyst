@@ -129,9 +129,8 @@ class data_uniqueness(BaseModel):
 @router.post('/user/file/qualitycheck/uniqueness/{filename}')
 def check_data_uniqueness(uniqueness:data_uniqueness,filename):
     try:
-        print("Hello")
         dataframe_arr=file_to_df(filename,uniqueness.user_id)
-        u=Uniqueness(dataframe_arr[0])
+        u=Uniqueness(dataframe_arr[0],uniqueness.table_type)
         
     except Exception as e:
         print("Error during checking uniqueness of data",e)
