@@ -24,7 +24,7 @@ def file_to_df(file_name,user_id):
         else:
             raise HTTPException(status_code=400,detail="Invalid file format")
  
-        # print(df.columns)
+        df = df.drop(columns=['sn','s.n','SN','S_N','s n','S.N','S.n'],errors='ignore')
         random_arr=[]
         random=df.sample(3).to_dict(orient="index")
         for key,value in random.items():

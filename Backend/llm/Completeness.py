@@ -1,12 +1,9 @@
 import requests
 import json
-
 def completeness_llm(USER_PROMPT):
     SYSTEM_PROMPT = """
 You are a data-quality analyst.
-
 Analyze the input dataset and return a COMPLETE JSON object.
-
 IMPORTANT:
 - You MUST return the complete JSON object.
 - NEVER stop before the final closing }.
@@ -43,11 +40,8 @@ Never treat a key as a row index.
 Never skip any key.
 
 STEP 2 — FIND MISSING COLUMNS:
-
 The field missing_values is authoritative.
-
 For every column:
-
 IF missing_values > 0:
     The column MUST appear in exactly ONE category.
 
@@ -55,43 +49,31 @@ IF missing_values = 0:
     The column MUST NOT appear in any category.
 
 STEP 3 — CATEGORIZE:
-
 For every missing column choose exactly ONE category.
-
 Critical:
 Missing values seriously affect identification, core meaning, or essential purpose.
-
 Important:
 Useful for the main purpose, but the record can still be useful without it.
-
 General:
 Missing values have relatively little effect on the main purpose.
-
 Use:
 - table type
 - table purpose
 - column meaning
 - missing percentage
-
 Do not classify using the column name alone.
 
 STEP 4 — REASON:
-
 Every categorized column MUST contain:
-
 - exact original column name
 - exact missing_values
 - exact missing_percentage
 - short reason
-
 The reason must agree with the selected category.
-
 Keep reasons SHORT.
 
 STEP 5 — SUGGESTIONS:
-
 Return suggestions as an ARRAY of short strings.
-
 Each suggestion:
 - must be a separate array item
 - must be short
@@ -126,7 +108,7 @@ Return exactly this JSON structure:
         "Important": [],
         "General": []
     },
-    "suggestions": []
+    "suggestions": [],
 }
 
 Each category item MUST have this structure:
@@ -139,9 +121,7 @@ Each category item MUST have this structure:
 }
 
 FINAL CHECK:
-
 Before returning the JSON:
-
 1. Find every column where missing_values > 0.
 2. Put every such column into exactly ONE category.
 3. Do not put columns with missing_values = 0 into categories.
@@ -178,14 +158,9 @@ Before returning the JSON:
         )
 
         response.raise_for_status()
-
         result = response.json()
-
         answer = result["message"]["content"]
-
-
         print(answer)
-
         return answer
 
     except Exception:

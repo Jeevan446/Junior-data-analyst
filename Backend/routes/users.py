@@ -6,8 +6,8 @@ from database.queries import search_user,add_users
 from core.file_quality.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
-from core.file_quality.file_quality import Completeness
-from llm.dataqualityanalysis import completeness_llm
+from core.file_quality.file_quality import Completeness,Uniqueness
+from llm.Completeness import completeness_llm
 
 router=APIRouter()
 
@@ -106,16 +106,34 @@ def analyze(user: User):
 class data_completeness(BaseModel):
     user_id:str
 
-@router.post('/user/file/qualitycheck/{filename}')
+@router.post('/user/file/qualitycheck/completeness/{filename}')
 def check_data_completeness(filename,user:data_completeness):
     try:
         dataframe=file_to_df(filename,user.user_id)
+        print(dataframe)
         c=Completeness(dataframe[0])
         print(c.sending_values())
         llm_feed=(c.sending_values())
         llm_response=completeness_llm(llm_feed)
-
         return {'sucess':True,'llm_response':{"message":llm_response}}
 
     except Exception as e:
         print("Error during checking completenss of data",e)
+        raise HTTPException(status_code=500,detail="Error during quality check of data")
+
+
+class data_uniqueness(BaseModel):
+    user_id:str
+    table_type:str
+
+@router.post('/user/file/qualitycheck/uniqueness/{filename}')
+def check_data_uniqueness(uniqueness:data_uniqueness,filename):
+    try:
+        print("Hello")
+        dataframe_arr=file_to_df(filename,uniqueness.user_id)
+        u=Uniqueness(dataframe_arr[0])
+        
+    except Exception as e:
+        print("Error during checking uniqueness of data",e)
+        raise HTTPException(status_code=500,detail="Error during quality check of data")
+
