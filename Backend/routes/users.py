@@ -131,6 +131,7 @@ def check_data_uniqueness(uniqueness:data_uniqueness,filename):
     try:
         dataframe_arr=file_to_df(filename,uniqueness.user_id)
         u=Uniqueness(dataframe_arr[0],uniqueness.table_type)
+        return{'sucess':True,'uniqueness':u.sending_arr}
         
     except Exception as e:
         print("Error during checking uniqueness of data",e)
