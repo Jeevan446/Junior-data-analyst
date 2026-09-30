@@ -6,8 +6,8 @@ from database.queries import search_user,add_users
 from core.file_quality.files_to_dataframes1 import file_to_df
 from outputs.clean_filename import clean_filename
 from typing import List
-from core.file_quality.file_quality import Completeness,Uniqueness
-from llm.Completeness import completeness_llm
+from core.file_quality.file_quality import Completeness,Uniqueness,Validation
+# from llm.Completeness import completeness_llm
 
 router=APIRouter()
 
@@ -103,6 +103,9 @@ def analyze(user: User):
         )
    
 
+
+
+
 class data_completeness(BaseModel):
     user_id:str
 
@@ -110,30 +113,50 @@ class data_completeness(BaseModel):
 def check_data_completeness(filename,user:data_completeness):
     try:
         dataframe=file_to_df(filename,user.user_id)
-        print(dataframe)
         c=Completeness(dataframe[0])
-        print(c.sending_values())
-        llm_feed=(c.sending_values())
-        llm_response=completeness_llm(llm_feed)
-        return {'sucess':True,'llm_response':{"message":llm_response}}
-
+        values=c.send_values()
+        return{'sucess':True,'value':values}
     except Exception as e:
         print("Error during checking completenss of data",e)
         raise HTTPException(status_code=500,detail="Error during quality check of data")
 
 
+
+
+
 class data_uniqueness(BaseModel):
     user_id:str
-    table_type:str
 
 @router.post('/user/file/qualitycheck/uniqueness/{filename}')
 def check_data_uniqueness(uniqueness:data_uniqueness,filename):
     try:
         dataframe_arr=file_to_df(filename,uniqueness.user_id)
-        u=Uniqueness(dataframe_arr[0],uniqueness.table_type)
-        return{'sucess':True,'uniqueness':u.sending_arr}
+        u=Uniqueness(dataframe_arr[0])
+        sending_value=u.send_values()
+        return{'sucess':True,'uniqueness':sending_value}
         
     except Exception as e:
         print("Error during checking uniqueness of data",e)
         raise HTTPException(status_code=500,detail="Error during quality check of data")
 
+
+
+class data_validation(BaseModel):
+    user_id:str
+    column_name:str
+    validation_type:str
+    validation_metadata:dict
+
+@router.post('/user/file/qualitycheck/validity/{filename}')
+def check_validity(data:data_validation,filename):
+    try:
+        dataframe=file_to_df(filename,data.user_id)
+        v=Validation(dataframe[0],data.column_name,data.validation_type,data.validation_metadata)
+        sending_values=v.send_values()
+        return{"sucess":True,'validation':sending_values}
+    except Exception as e:
+        print("Error during checking validity of data",e)
+        raise HTTPException(status_code=500,detail="Error during quality check of data")
+
+
+    

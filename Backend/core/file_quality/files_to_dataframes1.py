@@ -6,8 +6,6 @@ def file_to_df(file_name,user_id):
     try:
         # print(file_name_arr)
         dfs=[]
-
-
         path=Path(file_name)
         folder_file_path=Path("temp_files")/file_name
         df_name=path.stem.split("&")[1]
@@ -23,7 +21,6 @@ def file_to_df(file_name,user_id):
 
         else:
             raise HTTPException(status_code=400,detail="Invalid file format")
- 
         df = df.drop(columns=['sn','s.n','SN','S_N','s n','S.N','S.n'],errors='ignore')
         random_arr=[]
         random=df.sample(3).to_dict(orient="index")
@@ -50,3 +47,4 @@ def file_to_df(file_name,user_id):
     except Exception as e:
         print("Error while converting files to dataframes",e)
         raise HTTPException(status_code=300,detail='dfdsfd')
+        
