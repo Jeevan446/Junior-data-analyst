@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from dateutil import parser
 import pandas as pd
+import re
 def call_quality(dfs):
     for df_dict in dfs:
         c=Uniqueness(df_dict)
@@ -80,6 +81,8 @@ class Validation():
     def function_call(self):
         if(self.validation_type=="Date"):
             self.check_for_date()
+        elif(self.validation_type=='Email'):
+            self.email_validation()
     def check_for_date(self):
         try:
             if(self.validation_metadata['mixed']==True):
@@ -140,7 +143,41 @@ class Validation():
         except Exception as e:
             print("Error while checking date validation",e)
             raise HTTPException(status_code=500,detail="Error while checking validity of data")
-        
+    def email_validation(self):
+        try:
+            def validate_email(email):
+                if pd.isna(email):
+                    return "miss"
+                email=str(email)
+                pattern= '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                email_object=re.fullmatch(pattern,email) #returns Null if donot matches the pattern if matches returns object
+                if email_object:
+                    return True
+                else:
+                    return False
+
+
+
+            email_column=self.df_dict['dataframe'][self.column_name]
+            Validation_series=email_column.apply(validate_email)
+            validation_count=(Validation_series.value_counts())
+            total_rows=self.df_dict['dataframe'][self.column_name].shape[0]
+            no_of_invalid=int(validation_count[False])
+            invalid_percentage=float((no_of_invalid/total_rows)*100)
+            no_of_missing=int(validation_count['miss'])
+            missing_percentage=float((no_of_missing/total_rows)*100)
+            s_dict={
+                "column_name":self.column_name,
+                "no_of_invalid":no_of_invalid,
+                "invalid_percentage":invalid_percentage,
+                "no_of_missing":no_of_missing,
+                "missing_percentage":missing_percentage
+            }
+            self.sending_arr.append(s_dict)
+            self.send_values()
+        except Exception as e:
+            print("Error while checking validation",e)
+            raise HTTPException(status_code=500,detail='Error while checking validity of data')
 
     def send_values(self):
         return self.sending_arr
