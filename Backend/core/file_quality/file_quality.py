@@ -188,10 +188,11 @@ class Validation():
                 "str": str,
                 "int": int,
                 "float": float,
-                "bool": bool
+                "bool": bool,
                 }
             expected_type = datatype_map[types]
             def val(value):
+                print(value, type(value))
                 if(pd.isna(value)):
                     return 'miss'
                 else:
