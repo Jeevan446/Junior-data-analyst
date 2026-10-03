@@ -83,6 +83,8 @@ class Validation():
             self.check_for_date()
         elif(self.validation_type=='Email'):
             self.email_validation()
+        elif (self.validation_type=='Datatype'):
+            self.datatype_validation()
     def check_for_date(self):
         try:
             if(self.validation_metadata['mixed']==True):
@@ -162,9 +164,9 @@ class Validation():
             Validation_series=email_column.apply(validate_email)
             validation_count=(Validation_series.value_counts())
             total_rows=self.df_dict['dataframe'][self.column_name].shape[0]
-            no_of_invalid=int(validation_count[False])
+            no_of_invalid=int(validation_count.get(False, 0))
             invalid_percentage=float((no_of_invalid/total_rows)*100)
-            no_of_missing=int(validation_count['miss'])
+            no_of_missing=int(validation_count.get('miss', 0))
             missing_percentage=float((no_of_missing/total_rows)*100)
             s_dict={
                 "column_name":self.column_name,
@@ -179,5 +181,52 @@ class Validation():
             print("Error while checking validation",e)
             raise HTTPException(status_code=500,detail='Error while checking validity of data')
 
+    def datatype_validation(self):
+        try:
+            types = self.validation_metadata["type"]
+            datatype_map = {
+                "str": str,
+                "int": int,
+                "float": float,
+                "bool": bool
+                }
+            expected_type = datatype_map[types]
+            def val(value):
+                if(pd.isna(value)):
+                    return 'miss'
+                else:
+                    try:
+                        if(type(value)==expected_type):
+                            return True
+                        else:
+                            return False                       
+
+                    except:
+                        return False
+                   
+            df_column=self.df_dict['dataframe'][self.column_name]
+            print(df_column)
+            validated_series=df_column.apply(val)
+            # print(validated_series)
+            validation_count = validated_series.value_counts()
+            no_of_invalid=int(validation_count.get(False,0))
+            no_of_missing=int(validation_count.get('miss',0))
+            total_rows=self.df_dict['dataframe'][self.column_name].shape[0]
+            invalid_percentage=float((no_of_invalid/total_rows)*100)
+            missing_percentage=float((no_of_missing/total_rows)*100)
+            s_dict={
+                "column_name":self.column_name,
+                "no_of_invalid":no_of_invalid,
+                "invalid_percentage":invalid_percentage,
+                "no_of_missing":no_of_missing,
+                "missing_percentage":missing_percentage
+            }
+            self.sending_arr=[]
+            self.sending_arr.append(s_dict)
+        except Exception as e:
+            print("Error while checking datatype validation",e)
+            raise HTTPException(status_code=500,detail='Error while checking validity of data')
+
     def send_values(self):
         return self.sending_arr
+    
