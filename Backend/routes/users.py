@@ -1,4 +1,4 @@
-from fastapi import APIRouter,HTTPException
+from fastapi import APIRouter,HTTPException,Query
 from pydantic import BaseModel,Field
 import random
 import string
@@ -103,19 +103,30 @@ def analyze(user: User):
         )
    
 
+class Pagination(BaseModel):
+    is_active:bool=Field(default=False)
+    page_no:int=Field(default=1)
+    items:int=Field(default=1000)
+
 
 
 
 class data_completeness(BaseModel):
     user_id:str
 
+
+
 @router.post('/user/file/qualitycheck/completeness/{filename}')
-def check_data_completeness(filename,user:data_completeness):
+def check_data_completeness(filename,user:data_completeness,pagination:Pagination=Query()):
     try:
         dataframe=file_to_df(filename,user.user_id)
         c=Completeness(dataframe[0])
         values=c.send_values()
-        return{'sucess':True,'value':values}
+        if(pagination.is_active==True):
+            miss_dict=c.pag_missing_values(pagination.page_no,pagination.items)
+            return{'sucess':True,'value':{'metadata':values,'miss_dict':miss_dict}}
+        else:
+            return{'sucess':True,'value':values}
     except Exception as e:
         print("Error during checking completenss of data",e)
         raise HTTPException(status_code=500,detail="Error during quality check of data")
@@ -160,3 +171,21 @@ def check_validity(data:data_validation,filename):
 
 
     
+
+
+
+# # pagination logics
+
+
+
+# @router.get('/user/file/qualitycheck/details/{q_type}')
+# def table_details(q_type,pagination:Pagination=Query()):
+#     try:
+#         print(q_type)
+#         if(q_type=='missing_values'):
+#             c=Completeness
+#         print(paginatin)
+#     except Exception as e:
+#         print("Error while sending table details",e)
+#         raise HTTPException(status_code=500,detail='Error while fetching data')
+   

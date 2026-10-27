@@ -23,13 +23,27 @@ class Completeness:
                 dict['no_of_missing_values']=int(value)
                 dict['missing_percentage']=float(value/rows)*100
                 dict['datatype']=str(self.df_dict['dataframe'][index].dtype)
-                self.sending_arr.append(dict)   
-            
+                self.sending_arr.append(dict)
+         
         except Exception as e:
             print("Error while checking completeness of data",e)
             raise HTTPException(status_code=500,detail="Error while checking completeness of data")
+        
     def send_values(self):
         return self.sending_arr
+
+    def pag_missing_values(self,page_no,items):
+        try:
+            start = (page_no - 1) * items
+            end = (page_no * items)
+            miss=(self.df_dict['dataframe'].iloc[start:end,:].fillna('miss'))
+            miss=miss.to_dict()
+            
+            return miss
+           
+        except Exception as e:
+            print("Error while sending missing values table",e)
+        
 
 class Uniqueness():
     def __init__(self,df_dict):
@@ -85,6 +99,8 @@ class Validation():
             self.email_validation()
         elif (self.validation_type=='Datatype'):
             self.datatype_validation()
+        elif (self.validation_type=='Range'):
+            self.range_validation()
     def check_for_date(self):
         try:
             if(self.validation_metadata['mixed']==True):
@@ -107,7 +123,7 @@ class Validation():
                 s_dict={}
                 s_dict['column_name']=self.column_name
                 s_dict['no_of_invalid']=int(no_of_invalid)
-                s_dict['invalid_percentage']=float((no_of_invalid/self.df_dict['dataframe'][self.column_name].shape[0])*100)
+                s_dict['invalid_percentage']=float((no_of_invalid/((self.df_dict['dataframe'][self.column_name].shape[0])-no_of_missing))*100)
                 s_dict['no_of_missing']=int(no_of_missing)
                 s_dict['missing_percentage']=float((no_of_missing/self.df_dict['dataframe'][self.column_name].shape[0])*100)
                 self.sending_arr=s_dict
@@ -134,7 +150,7 @@ class Validation():
                 s_dict = {
         'column_name': self.column_name,
         'no_of_invalid': int(no_of_invalid),
-        'invalid_percentage': float(no_of_invalid / total_rows * 100) if total_rows else 0.0,
+        'invalid_percentage': float(no_of_invalid / (total_rows-no_of_missing) * 100) if total_rows else 0.0,
         'no_of_missing': int(no_of_missing),
         'missing_percentage': float(no_of_missing / total_rows * 100) if total_rows else 0.0
                 }
@@ -165,8 +181,8 @@ class Validation():
             validation_count=(Validation_series.value_counts())
             total_rows=self.df_dict['dataframe'][self.column_name].shape[0]
             no_of_invalid=int(validation_count.get(False, 0))
-            invalid_percentage=float((no_of_invalid/total_rows)*100)
             no_of_missing=int(validation_count.get('miss', 0))
+            invalid_percentage=float((no_of_invalid/(total_rows-no_of_missing))*100)
             missing_percentage=float((no_of_missing/total_rows)*100)
             s_dict={
                 "column_name":self.column_name,
@@ -192,7 +208,6 @@ class Validation():
                 }
             expected_type = datatype_map[types]
             def val(value):
-                print(value, type(value))
                 if(pd.isna(value)):
                     return 'miss'
                 else:
@@ -206,14 +221,13 @@ class Validation():
                         return False
                    
             df_column=self.df_dict['dataframe'][self.column_name]
-            print(df_column)
             validated_series=df_column.apply(val)
             # print(validated_series)
             validation_count = validated_series.value_counts()
             no_of_invalid=int(validation_count.get(False,0))
             no_of_missing=int(validation_count.get('miss',0))
             total_rows=self.df_dict['dataframe'][self.column_name].shape[0]
-            invalid_percentage=float((no_of_invalid/total_rows)*100)
+            invalid_percentage=float((no_of_invalid/(total_rows-no_of_missing))*100)
             missing_percentage=float((no_of_missing/total_rows)*100)
             s_dict={
                 "column_name":self.column_name,
@@ -227,7 +241,34 @@ class Validation():
         except Exception as e:
             print("Error while checking datatype validation",e)
             raise HTTPException(status_code=500,detail='Error while checking validity of data')
+    def range_validation(self):
+        try:
+            df=self.df_dict['dataframe']
+            selected_column=df[self.column_name]
+            sum_in_range=int(selected_column.between(self.validation_metadata['min_value'],self.validation_metadata['max_value']).sum())
+            no_of_missing=int(selected_column.isna().sum())
+            total_rows=int(selected_column.shape[0])
+            no_of_invalid=total_rows-sum_in_range
+            
+            invalid_percentage=float((no_of_invalid/(total_rows-no_of_missing))*100)
+            missing_percentage=float((no_of_missing/total_rows)*100)
+
+            s_dict={
+                "column_name":self.column_name,
+                "no_of_invalid":no_of_invalid,
+                "invalid_percentage":invalid_percentage,
+                "no_of_missing":no_of_missing,
+                "missing_percentage":missing_percentage
+            }
+            self.sending_arr=[]
+            self.sending_arr.append(s_dict)
+        except Exception as e:
+            print("Error while checking ")
+            raise
+    
+
 
     def send_values(self):
         return self.sending_arr
-    
+
+        
